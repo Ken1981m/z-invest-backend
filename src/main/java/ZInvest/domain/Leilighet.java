@@ -28,6 +28,7 @@ public class Leilighet {
     }
 
     private Leilighet(Builder builder) {
+        this.id = builder.id;
         this.navn = builder.navn;
         this.adresse = builder.adresse;
         this.postNr = builder.postNr;
@@ -35,12 +36,18 @@ public class Leilighet {
     }
 
     public static class Builder {
+        private int id;
         private String navn;
         private String adresse;
         private String postNr;
         private String postSted;
 
         public Builder() {
+        }
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
         }
 
         public Builder navn(String navn) {

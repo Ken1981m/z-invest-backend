@@ -1,6 +1,6 @@
-package ZInvest.domain;
+package ZInvest.domain.dto;
 
-public class UtgiftType {
+public class UtgiftTypeRequest {
 
     private int id;
     private String navn;
@@ -18,7 +18,7 @@ public class UtgiftType {
         return beskrivelse;
     }
 
-    private UtgiftType(Builder builder) {
+    private UtgiftTypeRequest(Builder builder) {
         this.id = builder.id;
         this.navn = builder.navn;
         this.beskrivelse = builder.beskrivelse;
@@ -47,8 +47,9 @@ public class UtgiftType {
             return this;
         }
 
-        public UtgiftType build() {
-            return new UtgiftType(this);
+
+        public UtgiftTypeRequest build() {
+            return new UtgiftTypeRequest(this);
         }
     }
 }

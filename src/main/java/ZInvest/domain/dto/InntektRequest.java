@@ -1,16 +1,14 @@
-package ZInvest.domain;
+package ZInvest.domain.dto;
 
-public class Inntekt {
-    private int id;
+import ZInvest.domain.InntektType;
+import ZInvest.domain.Leilighet;
+
+public class InntektRequest {
     private Leilighet leilighet;
     private InntektType inntektType;
     private Double belop;
     private Integer aar;
     private Integer mnd;
-
-    public int getId() {
-        return id;
-    }
 
     public Leilighet getLeilighet() {
         return leilighet;
@@ -32,7 +30,7 @@ public class Inntekt {
         return mnd;
     }
 
-    private Inntekt(Builder builder) {
+    private InntektRequest(Builder builder) {
         this.leilighet = builder.leilighet;
         this.inntektType = builder.inntektType;
         this.belop = builder.belop;
@@ -41,7 +39,6 @@ public class Inntekt {
     }
 
     public static class Builder {
-        private int id;
         private Leilighet leilighet;
         private InntektType inntektType;
         private Double belop;
@@ -49,11 +46,6 @@ public class Inntekt {
         private Integer mnd;
 
         public Builder() {
-        }
-
-        public Builder id(int id) {
-            this.id = id;
-            return this;
         }
 
         public Builder leilighet(Leilighet leilighet) {
@@ -81,9 +73,8 @@ public class Inntekt {
             return this;
         }
 
-        public Inntekt build() {
-            return new Inntekt(this);
+        public InntektRequest build() {
+            return new InntektRequest(this);
         }
     }
-
 }
