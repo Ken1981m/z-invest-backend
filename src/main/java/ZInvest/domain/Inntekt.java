@@ -2,7 +2,9 @@ package ZInvest.domain;
 
 public class Inntekt {
     private int id;
+    private int leilighetId;
     private Leilighet leilighet;
+    private int inntektTypeId;
     private InntektType inntektType;
     private Double belop;
     private Integer aar;
@@ -12,12 +14,28 @@ public class Inntekt {
         return id;
     }
 
+    public int getLeilighetId() {
+        return leilighetId;
+    }
+
+    public int getInntektTypeId() {
+        return inntektTypeId;
+    }
+
     public Leilighet getLeilighet() {
         return leilighet;
     }
 
+    public void setLeilighet(Leilighet leilighet) {
+        this.leilighet = leilighet;
+    }
+
     public InntektType getInntektType() {
         return inntektType;
+    }
+
+    public void setInntektType(InntektType inntektType) {
+        this.inntektType = inntektType;
     }
 
     public Double getBelop() {
@@ -33,8 +51,8 @@ public class Inntekt {
     }
 
     private Inntekt(Builder builder) {
-        this.leilighet = builder.leilighet;
-        this.inntektType = builder.inntektType;
+        this.leilighetId = builder.leilighetId;
+        this.inntektTypeId = builder.inntektTypeId;
         this.belop = builder.belop;
         this.aar = builder.aar;
         this.mnd = builder.mnd;
@@ -42,8 +60,8 @@ public class Inntekt {
 
     public static class Builder {
         private int id;
-        private Leilighet leilighet;
-        private InntektType inntektType;
+        private int leilighetId;
+        private int inntektTypeId;
         private Double belop;
         private Integer aar;
         private Integer mnd;
@@ -56,13 +74,13 @@ public class Inntekt {
             return this;
         }
 
-        public Builder leilighet(Leilighet leilighet) {
-            this.leilighet = leilighet;
+        public Builder leilighetId(int leilighetId) {
+            this.leilighetId = leilighetId;
             return this;
         }
 
-        public Builder inntektType(InntektType inntektType) {
-            this.inntektType = inntektType;
+        public Builder inntektTypeId(int inntektTypeId) {
+            this.inntektTypeId = inntektTypeId;
             return this;
         }
 

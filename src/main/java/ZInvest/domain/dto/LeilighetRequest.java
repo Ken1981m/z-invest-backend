@@ -5,14 +5,14 @@ public class LeilighetRequest {
     private int id;
     private String navn;
     private String adresse;
-    private String postNr;
-    private String postSted;
+    private String postnr;
+    private String poststed;
 
-    public LeilighetRequest(String navn, String adresse, String postNr, String postSted) {
+    public LeilighetRequest(String navn, String adresse, String postNr, String poststed) {
         this.navn = navn;
         this.adresse = adresse;
-        this.postNr = postNr;
-        this.postSted = postSted;
+        this.postnr = postNr;
+        this.poststed = poststed;
     }
 
     public int getId() {
@@ -39,20 +39,20 @@ public class LeilighetRequest {
         this.adresse = adresse;
     }
 
-    public String getPostNr() {
-        return postNr;
+    public String getPostnr() {
+        return postnr;
     }
 
-    public void setPostNr(String postNr) {
-        this.postNr = postNr;
+    public void setPostnr(String postnr) {
+        this.postnr = postnr;
     }
 
-    public String getPostSted() {
-        return postSted;
+    public String getPoststed() {
+        return poststed;
     }
 
-    public void setPostSted(String postSted) {
-        this.postSted = postSted;
+    public void setPoststed(String poststed) {
+        this.poststed = poststed;
     }
 
 
@@ -61,16 +61,16 @@ public class LeilighetRequest {
         this.id = builder.id;
         this.navn = builder.navn;
         this.adresse = builder.adresse;
-        this.postNr = builder.postNr;
-        this.postSted = builder.postSted;
+        this.postnr = builder.postnr;
+        this.poststed = builder.poststed;
     }
 
     public static class Builder {
         private int id;
         private String navn;
         private String adresse;
-        private String postNr;
-        private String postSted;
+        private String postnr;
+        private String poststed;
 
         public Builder() {
         }
@@ -91,12 +91,12 @@ public class LeilighetRequest {
         }
 
         public Builder postNr(String postNr) {
-            this.postNr = postNr;
+            this.postnr = postNr;
             return this;
         }
 
         public Builder postSted(String postSted) {
-            this.postSted = postSted;
+            this.poststed = postSted;
             return this;
         }
 

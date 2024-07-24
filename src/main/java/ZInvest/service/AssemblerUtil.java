@@ -4,10 +4,7 @@ import ZInvest.domain.Inntekt;
 import ZInvest.domain.InntektType;
 import ZInvest.domain.Leilighet;
 import ZInvest.domain.UtgiftType;
-import ZInvest.domain.dto.InntektRequest;
-import ZInvest.domain.dto.InntektTypeRequest;
-import ZInvest.domain.dto.LeilighetRequest;
-import ZInvest.domain.dto.UtgiftTypeRequest;
+import ZInvest.domain.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +15,8 @@ public class AssemblerUtil {
         return new Leilighet.Builder()
                 .navn(leilighetRequest.getNavn())
                 .adresse(leilighetRequest.getAdresse())
-                .postNr(leilighetRequest.getPostNr())
-                .postSted(leilighetRequest.getPostSted())
+                .postNr(leilighetRequest.getPostnr())
+                .postSted(leilighetRequest.getPoststed())
                 .build();
     }
 
@@ -40,18 +37,13 @@ public class AssemblerUtil {
         List<InntektRequest> inntektRequests = new ArrayList<>();
         inntektList.forEach(inntekt ->
                 inntektRequests.add(new InntektRequest.Builder()
-                        .leilighet(inntekt.getLeilighet())
-                        .inntektType(inntekt.getInntektType())
+                        .label(MaanedMap.hentMaaned(inntekt.getMnd()))
                         .belop(inntekt.getBelop())
-                        .aar(inntekt.getAar())
-                        .mnd(inntekt.getMnd())
                         .build()
                 )
         );
         return inntektRequests;
     }
-
-
 
     public static List<UtgiftTypeRequest> assembleUtgiftTypeRequest(List<UtgiftType> utgiftTypeList) {
         List<UtgiftTypeRequest> utgiftTypeRequests = new ArrayList<>();
@@ -66,17 +58,13 @@ public class AssemblerUtil {
         return utgiftTypeRequests;
     }
 
-    public static List<LeilighetRequest> assembleLeilighetRequest(List<Leilighet> leilighetList) {
-        List<LeilighetRequest> leilighetRequests = new ArrayList<>();
-        leilighetList.forEach(leilighet ->
-                leilighetRequests.add(new LeilighetRequest.Builder()
-                        .id(leilighet.getId())
-                        .navn(leilighet.getNavn())
-                        .adresse(leilighet.getAdresse())
-
-                        .build()
-                )
-        );
-        return leilighetRequests;
+    public static LeilighetRequest assembleLeilighetRequest(Leilighet leilighet) {
+        return new LeilighetRequest.Builder()
+                .id(leilighet.getId())
+                .navn(leilighet.getNavn())
+                .adresse(leilighet.getAdresse())
+                .postNr(leilighet.getPostNr())
+                .postSted(leilighet.getPostSted())
+                .build();
     }
 }

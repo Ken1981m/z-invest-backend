@@ -1,91 +1,65 @@
 package ZInvest.controller;
 
-import ZInvest.domain.Inntekt;
-import ZInvest.domain.InntektType;
-import ZInvest.domain.Leilighet;
-import ZInvest.domain.UtgiftType;
-import ZInvest.domain.dto.InntektRequest;
-import ZInvest.domain.dto.InntektTypeRequest;
-import ZInvest.domain.dto.LeilighetRequest;
-import ZInvest.domain.dto.UtgiftTypeRequest;
-import ZInvest.repository.ZInvestRepository;
-import ZInvest.service.AssemblerUtil;
+import ZInvest.domain.dto.InntektFormData;
+import ZInvest.domain.dto.*;
+import ZInvest.service.RegnskapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 public class ZInvestDbController {
 
-    @Autowired
-    ZInvestRepository repository;
+    RegnskapService regnskapService;
 
+    @Autowired
+    public ZInvestDbController(RegnskapService regnskapService) {
+        this.regnskapService = regnskapService;
+    }
 
     @CrossOrigin
     @PostMapping("/leggTilLeilighet")
-    public ResponseEntity<String> leggTilLeilighet(@RequestBody LeilighetRequest leilighetReq) {
-        Leilighet leilighet = AssemblerUtil.assembleLeilighet(leilighetReq);
-        repository.leggTilLeilighet(leilighet);
-        return ResponseEntity.ok().build();
+    public boolean leggTilLeilighet(@RequestBody LeilighetRequest leilighetReq) {
+        return regnskapService.leggTilLeilighet(leilighetReq);
     }
 
     @CrossOrigin
     @PostMapping("/leggTilInntekt")
-    public ResponseEntity<String> leggTilInntekt(@RequestParam String leilighetId,
-                                                 @RequestParam String inntektTypeId,
-                                                 @RequestParam String formatertDato,
-                                                 @RequestParam Double belop) {
-        repository.leggTilInntekt(Integer.parseInt(leilighetId),
-                                  Integer.parseInt(inntektTypeId),
-                                  formatertDato.substring(0, formatertDato.indexOf("-")),
-                                  formatertDato.substring(formatertDato.indexOf("-")+1),
-                                  belop);
-        return ResponseEntity.ok().build();
+    public boolean leggTilInntekt(@RequestBody InntektFormData inntektFormData) {
+        return regnskapService.leggTilInntekt(inntektFormData);
     }
 
     @CrossOrigin
     @PostMapping("/leggTilUtgift")
-    public ResponseEntity<String> leggTilUtgift(@RequestParam String leilighetId,
-                                                 @RequestParam String utgiftTypeId,
-                                                 @RequestParam String formatertDato,
-                                                 @RequestParam Double belop) {
-        repository.leggTilUtgift(Integer.parseInt(leilighetId),
-                Integer.parseInt(utgiftTypeId),
-                formatertDato.substring(0, formatertDato.indexOf("-")),
-                formatertDato.substring(formatertDato.indexOf("-")+1),
-                belop);
-        return ResponseEntity.ok().build();
+    public boolean leggTilUtgift(@RequestBody UtgiftFormData utgiftFormData) {
+        return regnskapService.leggTilUtgift(utgiftFormData);
     }
 
     @CrossOrigin
     @GetMapping("/hentInntektTyper")
     public List<InntektTypeRequest> hentInntektTyper() {
-        List<InntektType> inntektTypeList = repository.hentInntektTyper();
-        return AssemblerUtil.assembleInntektTypeRequest(inntektTypeList);
+        return regnskapService.hentInntektTyper();
     }
 
     @CrossOrigin
-    @GetMapping("/hentInntekt")
-    public List<InntektRequest> hentInntekt(@RequestParam String leilighetId,
-                                            @RequestParam String aar) {
-        List<Inntekt> inntektList = repository.hentInntekt(Integer.parseInt(leilighetId), Integer.parseInt(aar));
-        return AssemblerUtil.assembleInntektRequest(inntektList);
+    @GetMapping("/hentInntektRegnskap")
+    public List<InntektRequest> hentInntektRegnskap(@RequestParam String leilighetId,
+                                                    @RequestParam String aar) {
+        List<InntektRequest> inntektRequests = regnskapService.hentInntektRegnskap(leilighetId, aar);
+        return inntektRequests;
     }
 
     @CrossOrigin
     @GetMapping("/hentUtgiftTyper")
     public List<UtgiftTypeRequest> hentUtgiftTyper() {
-        List<UtgiftType> utgiftTypeList = repository.hentUtgiftTyper();
-        return AssemblerUtil.assembleUtgiftTypeRequest(utgiftTypeList);
+        return regnskapService.hentUtgiftTyper();
     }
 
     @CrossOrigin
     @GetMapping("/hentLeiligheter")
     public List<LeilighetRequest> hentLeiligheter() {
-        List<Leilighet> leilighetList = repository.hentLeiligheter();
-        return AssemblerUtil.assembleLeilighetRequest(leilighetList);
+        return regnskapService.hentLeiligheter();
     }
 
 }
