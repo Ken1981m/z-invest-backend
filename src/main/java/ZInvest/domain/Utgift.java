@@ -4,12 +4,79 @@ public class Utgift {
 
     private int id;
     private Integer leilighetId;
+    private Leilighet leilighet;
     private Integer utgiftTypeId;
+    private UtgiftType utgiftType;
     private Double belop;
     private Integer aar;
     private Integer mnd;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getLeilighetId() {
+        return leilighetId;
+    }
+
+    public void setLeilighetId(Integer leilighetId) {
+        this.leilighetId = leilighetId;
+    }
+
+    public Leilighet getLeilighet() {
+        return leilighet;
+    }
+
+    public void setLeilighet(Leilighet leilighet) {
+        this.leilighet = leilighet;
+    }
+
+    public Integer getUtgiftTypeId() {
+        return utgiftTypeId;
+    }
+
+    public void setUtgiftTypeId(Integer utgiftTypeId) {
+        this.utgiftTypeId = utgiftTypeId;
+    }
+
+    public UtgiftType getUtgiftType() {
+        return utgiftType;
+    }
+
+    public void setUtgiftType(UtgiftType utgiftType) {
+        this.utgiftType = utgiftType;
+    }
+
+    public Double getBelop() {
+        return belop;
+    }
+
+    public void setBelop(Double belop) {
+        this.belop = belop;
+    }
+
+    public Integer getAar() {
+        return aar;
+    }
+
+    public void setAar(Integer aar) {
+        this.aar = aar;
+    }
+
+    public Integer getMnd() {
+        return mnd;
+    }
+
+    public void setMnd(Integer mnd) {
+        this.mnd = mnd;
+    }
+
     private Utgift(Builder builder) {
+        this.id = builder.id;
         this.leilighetId = builder.leilighetId;
         this.utgiftTypeId = builder.inntektTypeId;
         this.belop = builder.belop;
@@ -19,6 +86,7 @@ public class Utgift {
     }
 
     public static class Builder {
+        private int id;
         private Integer leilighetId;
         private Integer inntektTypeId;
         private Double belop;
@@ -26,6 +94,11 @@ public class Utgift {
         private Integer mnd;
 
         public Builder() {
+        }
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
         }
 
         public Builder leilighetId(Integer leilighetId) {

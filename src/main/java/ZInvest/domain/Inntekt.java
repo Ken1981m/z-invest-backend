@@ -51,6 +51,7 @@ public class Inntekt {
     }
 
     private Inntekt(Builder builder) {
+        this.id = builder.id;
         this.leilighetId = builder.leilighetId;
         this.inntektTypeId = builder.inntektTypeId;
         this.belop = builder.belop;

@@ -4,6 +4,7 @@ public class UtgiftFormData {
     private String leilighetId;
     private String utgiftTypeId;
     private String formatertDato;
+    private Integer mnd;
     private Double belop;
 
     public String getLeilighetId() {
@@ -16,6 +17,10 @@ public class UtgiftFormData {
 
     public String getFormatertDato() {
         return formatertDato;
+    }
+
+    public Integer getMnd() {
+        return mnd;
     }
 
     public Double getBelop() {

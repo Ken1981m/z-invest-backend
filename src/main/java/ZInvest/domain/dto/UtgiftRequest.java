@@ -1,7 +1,7 @@
 package ZInvest.domain.dto;
 
 
-public class InntektRequest {
+public class UtgiftRequest {
     private int id;
     private int mnd;
     private String label;
@@ -23,7 +23,7 @@ public class InntektRequest {
         return belop;
     }
 
-    private InntektRequest(Builder builder) {
+    private UtgiftRequest(Builder builder) {
         this.id = builder.id;
         this.mnd = builder.mnd;
         this.label = builder.label;
@@ -59,8 +59,8 @@ public class InntektRequest {
             return this;
         }
 
-        public InntektRequest build() {
-            return new InntektRequest(this);
+        public UtgiftRequest build() {
+            return new UtgiftRequest(this);
         }
     }
 }

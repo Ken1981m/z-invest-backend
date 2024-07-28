@@ -16,12 +16,15 @@ import static org.mockito.Mockito.when;
 
 class RegnskapServiceTest {
 
+    DataService dataService;
     RegnskapService regnskapService;
     ZInvestRepository repository;
 
     @BeforeEach
     public void setup() {
         repository = mock(ZInvestRepository.class);
+        dataService = new DataService();
+        dataService.setRepository(repository);
         regnskapService = new RegnskapService();
         regnskapService.setRepository(repository);
     }
@@ -31,7 +34,7 @@ class RegnskapServiceTest {
         List<Leilighet> leilighet = hentTestLeilighet();
         when(repository.hentLeiligheter()).thenReturn(leilighet);
 
-        List<LeilighetRequest> leilighetRequests = regnskapService.hentLeiligheter();
+        List<LeilighetRequest> leilighetRequests = dataService.hentLeiligheter();
 
         assertThat(leilighet.get(0).getNavn() == leilighetRequests.get(0).getNavn());
     }

@@ -1,7 +1,5 @@
 package ZInvest.domain.dto;
 
-import ZInvest.domain.InntektType;
-
 public class InntektTypeRequest {
 
     private int id;

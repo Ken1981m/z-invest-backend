@@ -1,9 +1,6 @@
 package ZInvest.service;
 
-import ZInvest.domain.Inntekt;
-import ZInvest.domain.InntektType;
-import ZInvest.domain.Leilighet;
-import ZInvest.domain.UtgiftType;
+import ZInvest.domain.*;
 import ZInvest.domain.dto.*;
 
 import java.util.ArrayList;
@@ -37,12 +34,28 @@ public class AssemblerUtil {
         List<InntektRequest> inntektRequests = new ArrayList<>();
         inntektList.forEach(inntekt ->
                 inntektRequests.add(new InntektRequest.Builder()
+                        .id(inntekt.getId())
+                        .mnd(inntekt.getMnd())
                         .label(MaanedMap.hentMaaned(inntekt.getMnd()))
                         .belop(inntekt.getBelop())
                         .build()
                 )
         );
         return inntektRequests;
+    }
+
+    public static List<UtgiftRequest> assembleUtgiftRequest(List<Utgift> utgiftList) {
+        List<UtgiftRequest> utgiftRequests = new ArrayList<>();
+        utgiftList.forEach(utgift ->
+                utgiftRequests.add(new UtgiftRequest.Builder()
+                        .id(utgift.getId())
+                        .mnd(utgift.getMnd())
+                        .label(MaanedMap.hentMaaned(utgift.getMnd()))
+                        .belop(utgift.getBelop())
+                        .build()
+                )
+        );
+        return utgiftRequests;
     }
 
     public static List<UtgiftTypeRequest> assembleUtgiftTypeRequest(List<UtgiftType> utgiftTypeList) {
