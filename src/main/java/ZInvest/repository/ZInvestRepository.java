@@ -52,25 +52,29 @@ public class ZInvestRepository {
     }
 
     public boolean leggTilInntekt(InntektFormData inntektFormData) {
-        String sql = "INSERT INTO INNTEKT (LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO INNTEKT (LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 Integer.parseInt(inntektFormData.getLeilighetId()),
                 Integer.parseInt(inntektFormData.getInntektTypeId()),
                 inntektFormData.getBelop(),
                 Integer.parseInt(inntektFormData.getFormatertDato()
                         .substring(inntektFormData.getFormatertDato().indexOf("-")+1)),
-                Integer.parseInt(inntektFormData.getFormatertDato()
-                        .substring(0, inntektFormData.getFormatertDato().indexOf("-")))
+                inntektFormData.getMnd() != null
+                        ? inntektFormData.getMnd()
+                        : Integer.parseInt(inntektFormData.getFormatertDato()
+                          .substring(0, inntektFormData.getFormatertDato().indexOf("-"))),
+                inntektFormData.getBeskrivelse()
         );
         return true;
     }
 
     public boolean oppdaterInntekt(InntektFormData inntektFormData) {
-        String sql = "UPDATE INNTEKT SET BELOP = ? WHERE LEILIGHET_ID = ? AND INNTEKT_TYPE_ID = ? " +
+        String sql = "UPDATE INNTEKT SET BELOP = ?, BESKRIVELSE = ? WHERE LEILIGHET_ID = ? AND INNTEKT_TYPE_ID = ? " +
                 "AND AAR = ? AND MND = ?";
         jdbcTemplate.update(sql,
                 inntektFormData.getBelop(),
+                inntektFormData.getBeskrivelse(),
                 Integer.parseInt(inntektFormData.getLeilighetId()),
                 Integer.parseInt(inntektFormData.getInntektTypeId()),
                 Integer.parseInt(inntektFormData.getFormatertDato()
@@ -86,16 +90,20 @@ public class ZInvestRepository {
     }
 
     public boolean leggTilUtgiftType(UtgiftTypeFormData utgiftTypeFormData) {
-        String sql = "INSERT INTO UTGIFT_TYPE (NAVN, BESKRIVELSE) VALUES (?, ?)";
-        jdbcTemplate.update(sql, utgiftTypeFormData.getNavn(), utgiftTypeFormData.getBeskrivelse());
+        String sql = "INSERT INTO UTGIFT_TYPE (NAVN, BESKRIVELSE, MAANEDUAVHENGIG) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql,
+                utgiftTypeFormData.getNavn(),
+                utgiftTypeFormData.getBeskrivelse(),
+                utgiftTypeFormData.getMnduavhengig());
         return true;
     }
 
     public boolean oppdaterUtgiftType(UtgiftTypeFormData utgiftTypeFormData) {
-        String sql = "UPDATE UTGIFT_TYPE SET navn = ?, beskrivelse = ? WHERE id = ?";
+        String sql = "UPDATE UTGIFT_TYPE SET navn = ?, beskrivelse = ?, maaneduavhengig = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 utgiftTypeFormData.getNavn(),
                 utgiftTypeFormData.getBeskrivelse(),
+                utgiftTypeFormData.getMnduavhengig(),
                 utgiftTypeFormData.getId());
         return true;
     }
@@ -107,7 +115,26 @@ public class ZInvestRepository {
     }
 
     public boolean leggTilUtgift(UtgiftFormData utgiftFormData) {
-        String sql = "INSERT INTO UTGIFT (LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND) " +
+        String sql = "INSERT INTO UTGIFT (LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                Integer.parseInt(utgiftFormData.getLeilighetId()),
+                Integer.parseInt(utgiftFormData.getUtgiftTypeId()),
+                utgiftFormData.getBelop(),
+                Integer.parseInt(utgiftFormData.getFormatertDato()
+                        .substring(utgiftFormData.getFormatertDato().indexOf("-") + 1)),
+                utgiftFormData.getMnd() != null
+                        ? utgiftFormData.getMnd()
+                        : Integer.parseInt(utgiftFormData.getFormatertDato()
+                        .substring(0, utgiftFormData.getFormatertDato().indexOf("-"))),
+                utgiftFormData.getBeskrivelse()
+        );
+
+        return true;
+    }
+
+    public boolean leggTilUtgiftUtenMnd(UtgiftFormData utgiftFormData) {
+        String sql = "INSERT INTO UTGIFT (LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, BESKRIVELSE) " +
                 "VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 Integer.parseInt(utgiftFormData.getLeilighetId()),
@@ -115,8 +142,7 @@ public class ZInvestRepository {
                 utgiftFormData.getBelop(),
                 Integer.parseInt(utgiftFormData.getFormatertDato()
                         .substring(utgiftFormData.getFormatertDato().indexOf("-") + 1)),
-                Integer.parseInt(utgiftFormData.getFormatertDato()
-                        .substring(0, utgiftFormData.getFormatertDato().indexOf("-")))
+                utgiftFormData.getBeskrivelse()
         );
 
         return true;
@@ -124,10 +150,11 @@ public class ZInvestRepository {
 
 
     public boolean oppdaterUtgift(UtgiftFormData utgiftFormData) {
-        String sql = "UPDATE UTGIFT SET BELOP = ? WHERE LEILIGHET_ID = ? AND UTGIFT_TYPE_ID = ? " +
+        String sql = "UPDATE UTGIFT SET BELOP = ?, BESKRIVELSE = ? WHERE LEILIGHET_ID = ? AND UTGIFT_TYPE_ID = ? " +
                 "AND AAR = ? AND MND = ?";
         jdbcTemplate.update(sql,
                 utgiftFormData.getBelop(),
+                utgiftFormData.getBeskrivelse(),
                 Integer.parseInt(utgiftFormData.getLeilighetId()),
                 Integer.parseInt(utgiftFormData.getUtgiftTypeId()),
                 Integer.parseInt(utgiftFormData.getFormatertDato()
@@ -153,7 +180,7 @@ public class ZInvestRepository {
     }
 
     public List<Inntekt> hentInntekt(int leilighetId, int aar) {
-        String sql = "SELECT ID, LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND " +
+        String sql = "SELECT ID, LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
                      "FROM INNTEKT WHERE " +
                      "LEILIGHET_ID = ? AND AAR = ? ORDER BY MND";
         List<Inntekt> inntektList = jdbcTemplate.query(sql, new Object[]{leilighetId, aar}, new InntektMapper());
@@ -167,24 +194,37 @@ public class ZInvestRepository {
 
 
     public List<Inntekt> hentInntekt(int leilighetId, int inntektTypeId, int aar) {
-        String sql = "SELECT ID, LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND " +
+        String sql = "SELECT ID, LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
                 "FROM INNTEKT WHERE " +
                 "LEILIGHET_ID = ? AND INNTEKT_TYPE_ID = ? AND AAR = ? ORDER BY MND";
         List<Inntekt> inntektList = jdbcTemplate.query(sql, new Object[]{leilighetId, inntektTypeId, aar}, new InntektMapper());
         return inntektList;
     }
 
+    public List<Utgift> hentUtgift(int leilighetId, int aar) {
+        String sql = "SELECT ID, LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
+                "FROM UTGIFT WHERE " +
+                "LEILIGHET_ID = ? AND AAR = ? ORDER BY MND";
+        List<Utgift> utgiftList = jdbcTemplate.query(sql, new Object[]{leilighetId, aar}, new UtgiftMapper());
+        return utgiftList;
+    }
+
 
     public List<Utgift> hentUtgift(int leilighetId, int utgiftTypeId, int aar) {
-        String sql = "SELECT ID, LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND " +
+        String sql = "SELECT ID, LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
                 "FROM UTGIFT WHERE " +
                 "LEILIGHET_ID = ? AND UTGIFT_TYPE_ID = ? AND AAR = ? ORDER BY MND";
         List<Utgift> utgiftList = jdbcTemplate.query(sql, new Object[]{leilighetId, utgiftTypeId, aar}, new UtgiftMapper());
         return utgiftList;
     }
 
+    public UtgiftType hentUtgiftType(int id) {
+        String sql = "SELECT ID, NAVN, BESKRIVELSE, MAANEDUAVHENGIG FROM UTGIFT_TYPE WHERE ID = ?";
+        return jdbcTemplate.queryForObject(sql,new Object[]{id}, new UtgiftTypeMapper());
+    }
+
     public List<UtgiftType> hentUtgiftTyper() {
-        String sql = "SELECT ID, NAVN, BESKRIVELSE FROM UTGIFT_TYPE";
+        String sql = "SELECT ID, NAVN, BESKRIVELSE, MAANEDUAVHENGIG FROM UTGIFT_TYPE ORDER BY NAVN";
         return jdbcTemplate.query(sql, new UtgiftTypeMapper());
     }
 

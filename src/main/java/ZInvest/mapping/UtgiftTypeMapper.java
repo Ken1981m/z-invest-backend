@@ -14,6 +14,7 @@ public class UtgiftTypeMapper implements RowMapper<UtgiftType> {
                 .id(rs.getInt("ID"))
                 .navn(rs.getString("NAVN"))
                 .beskrivelse(rs.getString("BESKRIVELSE"))
+                .mndUavhengig(rs.getInt("MAANEDUAVHENGIG") == 1 ? true : false)
                 .build();
         return utgiftType;
     }

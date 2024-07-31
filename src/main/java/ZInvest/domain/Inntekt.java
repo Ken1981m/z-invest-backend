@@ -9,6 +9,7 @@ public class Inntekt {
     private Double belop;
     private Integer aar;
     private Integer mnd;
+    private String beskrivelse;
 
     public int getId() {
         return id;
@@ -50,6 +51,10 @@ public class Inntekt {
         return mnd;
     }
 
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
     private Inntekt(Builder builder) {
         this.id = builder.id;
         this.leilighetId = builder.leilighetId;
@@ -57,6 +62,7 @@ public class Inntekt {
         this.belop = builder.belop;
         this.aar = builder.aar;
         this.mnd = builder.mnd;
+        this.beskrivelse = builder.beskrivelse;
     }
 
     public static class Builder {
@@ -66,6 +72,7 @@ public class Inntekt {
         private Double belop;
         private Integer aar;
         private Integer mnd;
+        private String beskrivelse;
 
         public Builder() {
         }
@@ -97,6 +104,11 @@ public class Inntekt {
 
         public Builder mnd(Integer mnd) {
             this.mnd = mnd;
+            return this;
+        }
+
+        public Builder beskrivelse(String beskrivelse) {
+            this.beskrivelse = beskrivelse;
             return this;
         }
 

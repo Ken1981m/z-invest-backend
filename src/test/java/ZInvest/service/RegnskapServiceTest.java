@@ -46,6 +46,12 @@ class RegnskapServiceTest {
         assertThat(inntekter.get(0).getBelop() + inntekter.get(1).getBelop()).isEqualTo(sumInntekt);
     }
 
+    @Test
+    public void testRundeAvBelop() {
+        Double tall = 123.43533535;
+        Double res = regnskapService.rundeAvBelop(tall);
+        assertThat(res).isEqualTo(123.44);
+    }
 
     private List<InntektRequest> hentTestInntekt() {
         InntektRequest inntekt1 = new InntektRequest.Builder()

@@ -17,6 +17,7 @@ public class UtgiftMapper implements RowMapper<Utgift> {
                 .belop(rs.getDouble("BELOP"))
                 .aar(rs.getInt("AAR"))
                 .mnd(rs.getInt("MND"))
+                .beskrivelse(rs.getString("BESKRIVELSE"))
                 .build();
         return utgift;
     }

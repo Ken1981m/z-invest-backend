@@ -17,6 +17,7 @@ public class InntektMapper implements RowMapper<Inntekt> {
                 .belop(rs.getDouble("BELOP"))
                 .aar(rs.getInt("AAR"))
                 .mnd(rs.getInt("MND"))
+                .beskrivelse(rs.getString("BESKRIVELSE"))
                 .build();
         return inntekt;
     }

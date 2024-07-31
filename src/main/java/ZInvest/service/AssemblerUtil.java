@@ -38,6 +38,7 @@ public class AssemblerUtil {
                         .mnd(inntekt.getMnd())
                         .label(MaanedMap.hentMaaned(inntekt.getMnd()))
                         .belop(inntekt.getBelop())
+                        .beskrivelse(inntekt.getBeskrivelse())
                         .build()
                 )
         );
@@ -52,6 +53,7 @@ public class AssemblerUtil {
                         .mnd(utgift.getMnd())
                         .label(MaanedMap.hentMaaned(utgift.getMnd()))
                         .belop(utgift.getBelop())
+                        .beskrivelse(utgift.getBeskrivelse())
                         .build()
                 )
         );
@@ -60,11 +62,12 @@ public class AssemblerUtil {
 
     public static List<UtgiftTypeRequest> assembleUtgiftTypeRequest(List<UtgiftType> utgiftTypeList) {
         List<UtgiftTypeRequest> utgiftTypeRequests = new ArrayList<>();
-        utgiftTypeList.forEach(inntektType ->
+        utgiftTypeList.forEach(utgiftType ->
                 utgiftTypeRequests.add(new UtgiftTypeRequest.Builder()
-                        .id(inntektType.getId())
-                        .navn(inntektType.getNavn())
-                        .beskrivelse(inntektType.getBeskrivelse())
+                        .id(utgiftType.getId())
+                        .navn(utgiftType.getNavn())
+                        .beskrivelse(utgiftType.getBeskrivelse())
+                        .mndUavhengig(utgiftType.isMndUavhengig())
                         .build()
                 )
         );

@@ -5,6 +5,7 @@ public class UtgiftTypeRequest {
     private int id;
     private String navn;
     private String beskrivelse;
+    private Boolean mndUavhengig;
 
     public int getId() {
         return id;
@@ -18,16 +19,22 @@ public class UtgiftTypeRequest {
         return beskrivelse;
     }
 
+    public Boolean getMndUavhengig() {
+        return mndUavhengig;
+    }
+
     private UtgiftTypeRequest(Builder builder) {
         this.id = builder.id;
         this.navn = builder.navn;
         this.beskrivelse = builder.beskrivelse;
+        this.mndUavhengig = builder.mndUavhengig;
     }
 
     public static class Builder {
         private int id;
         private String navn;
         private String beskrivelse;
+        private Boolean mndUavhengig;
 
         public Builder() {
         }
@@ -47,6 +54,10 @@ public class UtgiftTypeRequest {
             return this;
         }
 
+        public Builder mndUavhengig(Boolean mndUavhengig) {
+            this.mndUavhengig = mndUavhengig;
+            return this;
+        }
 
         public UtgiftTypeRequest build() {
             return new UtgiftTypeRequest(this);

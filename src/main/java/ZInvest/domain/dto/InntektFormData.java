@@ -6,6 +6,7 @@ public class InntektFormData {
     private String formatertDato;
     private Integer mnd;
     private Double belop;
+    private String beskrivelse;
 
     public String getLeilighetId() {
         return leilighetId;
@@ -25,5 +26,9 @@ public class InntektFormData {
 
     public Double getBelop() {
         return belop;
+    }
+
+    public String getBeskrivelse() {
+        return beskrivelse;
     }
 }

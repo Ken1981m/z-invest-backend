@@ -6,6 +6,7 @@ public class InntektRequest {
     private int mnd;
     private String label;
     private Double belop;
+    private String beskrivelse;
 
     public int getId() {
         return id;
@@ -23,11 +24,16 @@ public class InntektRequest {
         return belop;
     }
 
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
     private InntektRequest(Builder builder) {
         this.id = builder.id;
         this.mnd = builder.mnd;
         this.label = builder.label;
         this.belop = builder.belop;
+        this.beskrivelse = builder.beskrivelse;
     }
 
     public static class Builder {
@@ -35,6 +41,7 @@ public class InntektRequest {
         private int mnd;
         private String label;
         private Double belop;
+        private String beskrivelse;
 
         public Builder() {
         }
@@ -49,13 +56,18 @@ public class InntektRequest {
             return this;
         }
 
+        public Builder label(String label) {
+            this.label = label;
+            return this;
+        }
+
         public Builder belop(Double belop) {
             this.belop = belop;
             return this;
         }
 
-        public Builder label(String label) {
-            this.label = label;
+        public Builder beskrivelse(String beskrivelse) {
+            this.beskrivelse = beskrivelse;
             return this;
         }
 

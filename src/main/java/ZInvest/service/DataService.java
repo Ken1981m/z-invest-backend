@@ -1,6 +1,7 @@
 package ZInvest.service;
 
 import ZInvest.domain.Leilighet;
+import ZInvest.domain.UtgiftType;
 import ZInvest.domain.dto.*;
 import ZInvest.repository.ZInvestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,10 +100,18 @@ public class DataService {
 
     public boolean leggTilUtgift(UtgiftFormData utgiftFormData) {
         try {
-            return repository.leggTilUtgift(utgiftFormData);
+            if (utgiftFormData.getMnd() != null && utgiftFormData.getMnd().intValue() == 13) {
+                UtgiftType utgiftType = repository.hentUtgiftType(Integer.parseInt(utgiftFormData.getUtgiftTypeId()));
+                if (utgiftType.isMndUavhengig()) {
+                    return repository.leggTilUtgiftUtenMnd(utgiftFormData);
+                }
+            } else {
+                return repository.leggTilUtgift(utgiftFormData);
+            }
         } catch (Exception e) {
             return false;
         }
+        return false;
     }
 
     public boolean oppdaterUtgift(UtgiftFormData utgiftFormData) {
