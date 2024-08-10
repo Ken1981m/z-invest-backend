@@ -141,10 +141,10 @@ public class DataService {
         return AssemblerUtil.assembleInntektTypeRequest(repository.hentInntektTyper());
     }
 
-    public List<UtgiftRequest> hentUtgift(String leilighetId, String utgiftTypeId, String aar) {
+    public List<UtgiftRequest> hentUtgift(String leilighetId, Integer utgiftTypeId, String aar) {
         return AssemblerUtil.assembleUtgiftRequest(repository.hentUtgift(
                 Integer.parseInt(leilighetId),
-                Integer.parseInt(utgiftTypeId),
+                utgiftTypeId,
                 Integer.parseInt(aar)));
     }
 

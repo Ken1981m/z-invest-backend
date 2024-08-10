@@ -38,7 +38,7 @@ public class AssemblerUtil {
                         .mnd(inntekt.getMnd())
                         .label(MaanedMap.hentMaaned(inntekt.getMnd()))
                         .belop(inntekt.getBelop())
-                        .beskrivelse(inntekt.getBeskrivelse())
+                        .beskrivelse(inntekt.getBeskrivelse() != null ? inntekt.getBeskrivelse() : "")
                         .build()
                 )
         );
@@ -53,7 +53,11 @@ public class AssemblerUtil {
                         .mnd(utgift.getMnd())
                         .label(MaanedMap.hentMaaned(utgift.getMnd()))
                         .belop(utgift.getBelop())
-                        .beskrivelse(utgift.getBeskrivelse())
+                        .utgiftBeskrivelse(utgift.getBeskrivelse() != null ? utgift.getBeskrivelse() : "")
+                        .mndUavhengig(utgift.getMndUavhengig())
+                        .utgiftTypeId(utgift.getUtgiftTypeId())
+                        .utgiftTypeNavn(utgift.getUtgiftTypeNavn())
+                        .utgiftTypeBeskrivelse(utgift.getUtgiftTypeBeskrivelse())
                         .build()
                 )
         );
@@ -72,6 +76,19 @@ public class AssemblerUtil {
                 )
         );
         return utgiftTypeRequests;
+    }
+
+    public static List<UtgiftDetalj> assembleUtgiftDetalj(List<UtgiftRequest> utgiftRequestList) {
+        List<UtgiftDetalj> utgiftDetaljer = new ArrayList<>();
+        utgiftRequestList.forEach(utgiftRequest ->
+            utgiftDetaljer.add(new UtgiftDetalj.Builder()
+                    .navn(utgiftRequest.getLabel() != null ? utgiftRequest.getLabel() : utgiftRequest.getUtgiftBeskrivelse())
+                    .belop(utgiftRequest.getBelop())
+                    .build()
+            )
+        );
+
+        return utgiftDetaljer;
     }
 
     public static LeilighetRequest assembleLeilighetRequest(Leilighet leilighet) {

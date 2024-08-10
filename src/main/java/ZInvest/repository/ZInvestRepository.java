@@ -202,8 +202,10 @@ public class ZInvestRepository {
     }
 
     public List<Utgift> hentUtgift(int leilighetId, int aar) {
-        String sql = "SELECT ID, LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
-                "FROM UTGIFT WHERE " +
+        String sql = "SELECT U.ID, U.LEILIGHET_ID, U.UTGIFT_TYPE_ID, U.BELOP, U.AAR, U.MND, U.BESKRIVELSE AS UTGIFT_BESKRIVELSE," +
+                " UT.MAANEDUAVHENGIG, UT.NAVN AS UTGIFT_TYPE_NAVN, UT.BESKRIVELSE AS UTGIFT_TYPE_BESKRIVELSE " +
+                "FROM UTGIFT U, UTGIFT_TYPE UT WHERE " +
+                "U.UTGIFT_TYPE_ID = UT.ID AND " +
                 "LEILIGHET_ID = ? AND AAR = ? ORDER BY MND";
         List<Utgift> utgiftList = jdbcTemplate.query(sql, new Object[]{leilighetId, aar}, new UtgiftMapper());
         return utgiftList;
@@ -211,8 +213,10 @@ public class ZInvestRepository {
 
 
     public List<Utgift> hentUtgift(int leilighetId, int utgiftTypeId, int aar) {
-        String sql = "SELECT ID, LEILIGHET_ID, UTGIFT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
-                "FROM UTGIFT WHERE " +
+        String sql = "SELECT U.ID, U.LEILIGHET_ID, U.UTGIFT_TYPE_ID, U.BELOP, U.AAR, U.MND, U.BESKRIVELSE AS UTGIFT_BESKRIVELSE," +
+                " UT.MAANEDUAVHENGIG, UT.NAVN AS UTGIFT_TYPE_NAVN, UT.BESKRIVELSE AS UTGIFT_TYPE_BESKRIVELSE " +
+                "FROM UTGIFT U, UTGIFT_TYPE UT WHERE " +
+                "U.UTGIFT_TYPE_ID = UT.ID AND " +
                 "LEILIGHET_ID = ? AND UTGIFT_TYPE_ID = ? AND AAR = ? ORDER BY MND";
         List<Utgift> utgiftList = jdbcTemplate.query(sql, new Object[]{leilighetId, utgiftTypeId, aar}, new UtgiftMapper());
         return utgiftList;

@@ -13,11 +13,14 @@ public class UtgiftMapper implements RowMapper<Utgift> {
         Utgift utgift = new Utgift.Builder()
                 .id(rs.getInt("ID"))
                 .leilighetId(rs.getInt("LEILIGHET_ID"))
-                .inntektTypeId(rs.getInt("UTGIFT_TYPE_ID"))
+                .utgiftTypeId(rs.getInt("UTGIFT_TYPE_ID"))
+                .utgiftTypeNavn(rs.getString("UTGIFT_TYPE_NAVN"))
+                .utgiftTypeBeskrivelse(rs.getString("UTGIFT_TYPE_BESKRIVELSE"))
                 .belop(rs.getDouble("BELOP"))
                 .aar(rs.getInt("AAR"))
                 .mnd(rs.getInt("MND"))
-                .beskrivelse(rs.getString("BESKRIVELSE"))
+                .beskrivelse(rs.getString("UTGIFT_BESKRIVELSE"))
+                .mndUavhengig(rs.getInt("MAANEDUAVHENGIG") == 1 ? true : false)
                 .build();
         return utgift;
     }

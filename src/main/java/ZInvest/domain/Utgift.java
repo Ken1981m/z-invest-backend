@@ -6,11 +6,14 @@ public class Utgift {
     private Integer leilighetId;
     private Leilighet leilighet;
     private Integer utgiftTypeId;
+    private String utgiftTypeNavn;
+    private String utgiftTypeBeskrivelse;
     private UtgiftType utgiftType;
     private Double belop;
     private Integer aar;
     private Integer mnd;
     private String beskrivelse;
+    private Boolean mndUavhengig;
 
     public int getId() {
         return id;
@@ -42,6 +45,22 @@ public class Utgift {
 
     public void setUtgiftTypeId(Integer utgiftTypeId) {
         this.utgiftTypeId = utgiftTypeId;
+    }
+
+    public String getUtgiftTypeNavn() {
+        return utgiftTypeNavn;
+    }
+
+    public void setUtgiftTypeNavn(String utgiftTypeNavn) {
+        this.utgiftTypeNavn = utgiftTypeNavn;
+    }
+
+    public String getUtgiftTypeBeskrivelse() {
+        return utgiftTypeBeskrivelse;
+    }
+
+    public void setUtgiftTypeBeskrivelse(String utgiftTypeBeskrivelse) {
+        this.utgiftTypeBeskrivelse = utgiftTypeBeskrivelse;
     }
 
     public UtgiftType getUtgiftType() {
@@ -84,24 +103,38 @@ public class Utgift {
         this.beskrivelse = beskrivelse;
     }
 
+    public Boolean getMndUavhengig() {
+        return mndUavhengig;
+    }
+
+    public void setMndUavhengig(Boolean mndUavhengig) {
+        this.mndUavhengig = mndUavhengig;
+    }
+
     private Utgift(Builder builder) {
         this.id = builder.id;
         this.leilighetId = builder.leilighetId;
-        this.utgiftTypeId = builder.inntektTypeId;
+        this.utgiftTypeId = builder.utgiftTypeId;
+        this.utgiftTypeNavn = builder.utgiftTypeNavn;
+        this.utgiftTypeBeskrivelse = builder.utgiftTypeBeskrivelse;
         this.belop = builder.belop;
         this.aar = builder.aar;
         this.mnd = builder.mnd;
         this.beskrivelse = builder.beskrivelse;
+        this.mndUavhengig = builder.mndUavhengig;
     }
 
     public static class Builder {
         private int id;
         private Integer leilighetId;
-        private Integer inntektTypeId;
+        private Integer utgiftTypeId;
+        private String utgiftTypeNavn;
+        private String utgiftTypeBeskrivelse;
         private Double belop;
         private Integer aar;
         private Integer mnd;
         private String beskrivelse;
+        private Boolean mndUavhengig;
 
         public Builder() {
         }
@@ -116,8 +149,18 @@ public class Utgift {
             return this;
         }
 
-        public Builder inntektTypeId(Integer inntektTypeId) {
-            this.inntektTypeId = inntektTypeId;
+        public Builder utgiftTypeId(Integer utgiftTypeId) {
+            this.utgiftTypeId = utgiftTypeId;
+            return this;
+        }
+
+        public Builder utgiftTypeNavn(String utgiftTypeNavn) {
+            this.utgiftTypeNavn = utgiftTypeNavn;
+            return this;
+        }
+
+        public Builder utgiftTypeBeskrivelse(String utgiftTypeBeskrivelse) {
+            this.utgiftTypeBeskrivelse = utgiftTypeBeskrivelse;
             return this;
         }
 
@@ -138,6 +181,11 @@ public class Utgift {
 
         public Builder beskrivelse(String beskrivelse) {
             this.beskrivelse = beskrivelse;
+            return this;
+        }
+
+        public Builder mndUavhengig(Boolean mndUavhengig) {
+            this.mndUavhengig = mndUavhengig;
             return this;
         }
 

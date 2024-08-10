@@ -1,12 +1,19 @@
 package ZInvest.domain.dto;
 
 
+import java.util.List;
+
 public class UtgiftRequest {
     private int id;
     private int mnd;
     private String label;
     private Double belop;
-    private String beskrivelse;
+    private String utgiftBeskrivelse;
+    private Boolean mndUavhengig;
+    private Integer utgiftTypeId;
+    private String utgiftTypeNavn;
+    private String utgiftTypeBeskrivelse;
+    private List<UtgiftDetalj> utgiftDetaljer;
 
     public int getId() {
         return id;
@@ -24,8 +31,32 @@ public class UtgiftRequest {
         return belop;
     }
 
-    public String getBeskrivelse() {
-        return beskrivelse;
+    public String getUtgiftBeskrivelse() {
+        return utgiftBeskrivelse;
+    }
+
+    public Boolean getMndUavhengig() {
+        return mndUavhengig;
+    }
+
+    public Integer getUtgiftTypeId() {
+        return utgiftTypeId;
+    }
+
+    public String getUtgiftTypeNavn() {
+        return utgiftTypeNavn;
+    }
+
+    public String getUtgiftTypeBeskrivelse() {
+        return utgiftTypeBeskrivelse;
+    }
+
+    public List<UtgiftDetalj> getUtgiftDetaljer() {
+        return utgiftDetaljer;
+    }
+
+    public void setUtgiftDetaljer(List<UtgiftDetalj> utgiftDetaljer) {
+        this.utgiftDetaljer = utgiftDetaljer;
     }
 
     private UtgiftRequest(Builder builder) {
@@ -33,7 +64,12 @@ public class UtgiftRequest {
         this.mnd = builder.mnd;
         this.label = builder.label;
         this.belop = builder.belop;
-        this.beskrivelse = builder.beskrivelse;
+        this.utgiftBeskrivelse = builder.utgiftBeskrivelse;
+        this.mndUavhengig = builder.mndUavhengig;
+        this.utgiftTypeId = builder.utgiftTypeId;
+        this.utgiftTypeNavn = builder.utgiftTypeNavn;
+        this.utgiftTypeBeskrivelse = builder.utgiftTypeBeskrivelse;
+        this.utgiftDetaljer = builder.utgiftDetaljer;
     }
 
     public static class Builder {
@@ -41,8 +77,12 @@ public class UtgiftRequest {
         private int mnd;
         private String label;
         private Double belop;
-        private String beskrivelse;
+        private String utgiftBeskrivelse;
         private Boolean mndUavhengig;
+        private Integer utgiftTypeId;
+        private String utgiftTypeNavn;
+        private String utgiftTypeBeskrivelse;
+        private List<UtgiftDetalj> utgiftDetaljer;
 
         public Builder() {
         }
@@ -67,8 +107,33 @@ public class UtgiftRequest {
             return this;
         }
 
-        public Builder beskrivelse(String beskrivelse) {
-            this.beskrivelse = beskrivelse;
+        public Builder utgiftBeskrivelse(String utgiftBeskrivelse) {
+            this.utgiftBeskrivelse = utgiftBeskrivelse;
+            return this;
+        }
+
+        public Builder mndUavhengig(Boolean mndUavhengig) {
+            this.mndUavhengig = mndUavhengig;
+            return this;
+        }
+
+        public Builder utgiftTypeId(Integer utgiftTypeId) {
+            this.utgiftTypeId = utgiftTypeId;
+            return this;
+        }
+
+        public Builder utgiftTypeNavn(String utgiftTypeNavn) {
+            this.utgiftTypeNavn = utgiftTypeNavn;
+            return this;
+        }
+
+        public Builder utgiftTypeBeskrivelse(String utgiftTypeBeskrivelse) {
+            this.utgiftTypeBeskrivelse = utgiftTypeBeskrivelse;
+            return this;
+        }
+
+        public Builder utgiftDetaljer(List<UtgiftDetalj> utgiftDetaljer) {
+            this.utgiftDetaljer = utgiftDetaljer;
             return this;
         }
 

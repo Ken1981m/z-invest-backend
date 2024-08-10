@@ -3,6 +3,7 @@ package ZInvest.domain.dto;
 public enum ConstantsMap {
 
     SUM_BRUTTO_INNTEKT("Sum brutto inntekt (føres i skattemeldingen)"),
+    SUM_UTGIFTER("Sum utgifter"),
     SUM_BRUTTO_INNTEKT_MINUS_ALLE_UTGIFTER("Sum brutto inntekt (etter trekk av alle utgifter)"),
     ESTIMERT_SKATT("Estimert skatt"),
     FAKTISK_SKATT("Faktisk skatt"),
