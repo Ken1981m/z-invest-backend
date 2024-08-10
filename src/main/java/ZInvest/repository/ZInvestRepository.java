@@ -150,16 +150,11 @@ public class ZInvestRepository {
 
 
     public boolean oppdaterUtgift(UtgiftFormData utgiftFormData) {
-        String sql = "UPDATE UTGIFT SET BELOP = ?, BESKRIVELSE = ? WHERE LEILIGHET_ID = ? AND UTGIFT_TYPE_ID = ? " +
-                "AND AAR = ? AND MND = ?";
+        String sql = "UPDATE UTGIFT SET BELOP = ?, BESKRIVELSE = ? WHERE ID = ?";
         jdbcTemplate.update(sql,
                 utgiftFormData.getBelop(),
                 utgiftFormData.getBeskrivelse(),
-                Integer.parseInt(utgiftFormData.getLeilighetId()),
-                Integer.parseInt(utgiftFormData.getUtgiftTypeId()),
-                Integer.parseInt(utgiftFormData.getFormatertDato()
-                        .substring(utgiftFormData.getFormatertDato().indexOf("-")+1)),
-                utgiftFormData.getMnd());
+                utgiftFormData.getId());
         return true;
     }
 
@@ -241,5 +236,6 @@ public class ZInvestRepository {
         String sql = "SELECT ID, NAVN, ADRESSE, POSTNR, POSTSTED FROM LEILIGHET ORDER BY NAVN";
         return jdbcTemplate.query(sql, new LeilighetMapper());
     }
+
 
 }

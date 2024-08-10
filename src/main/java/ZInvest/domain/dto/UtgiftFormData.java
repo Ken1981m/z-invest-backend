@@ -1,12 +1,17 @@
 package ZInvest.domain.dto;
 
 public class UtgiftFormData {
+    private Integer id;
     private String leilighetId;
     private String utgiftTypeId;
     private String formatertDato;
     private Integer mnd;
     private Double belop;
     private String beskrivelse;
+
+    public Integer getId() {
+        return id;
+    }
 
     public String getLeilighetId() {
         return leilighetId;
