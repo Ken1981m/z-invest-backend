@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Repository
 public class ZInvestRepository {
@@ -174,16 +176,21 @@ public class ZInvestRepository {
        return jdbcTemplate.query(sql, new InntektTypeMapper());
     }
 
-    public List<Inntekt> hentInntekt(int leilighetId, int aar) {
-        String sql = "SELECT ID, LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
-                     "FROM INNTEKT WHERE " +
-                     "LEILIGHET_ID = ? AND AAR = ? ORDER BY MND";
-        List<Inntekt> inntektList = jdbcTemplate.query(sql, new Object[]{leilighetId, aar}, new InntektMapper());
+    public List<Inntekt> hentInntekt(Integer[] leilighetIds, int aar) {
+        String placeholders = IntStream.range(0, leilighetIds.length)
+                .mapToObj(i -> "?")
+                .collect(Collectors.joining(","));
 
-        inntektList.stream().forEach(inntekt -> {
-            inntekt.setLeilighet(hentLeilighet(inntekt.getLeilighetId()));
-            inntekt.setInntektType(hentInntektType(inntekt.getInntektTypeId()));
-        });
+        String sql = "SELECT SUM(BELOP) AS BELOP, AAR, MND " +
+                     "FROM INNTEKT WHERE " +
+                     "LEILIGHET_ID IN (" + placeholders + ") AND AAR = ? GROUP BY MND, AAR ORDER BY MND";
+
+        Object[] params = new Object[leilighetIds.length + 1];
+        System.arraycopy(leilighetIds, 0, params, 0, leilighetIds.length);
+        params[leilighetIds.length] = aar;
+
+        List<Inntekt> inntektList = jdbcTemplate.query(sql, params, new InntektRegnskapMapper());
+
         return inntektList;
     }
 
@@ -196,13 +203,22 @@ public class ZInvestRepository {
         return inntektList;
     }
 
-    public List<Utgift> hentUtgift(int leilighetId, int aar) {
+    public List<Utgift> hentUtgift(Integer[] leilighetIds, int aar) {
+        String placeholders = IntStream.range(0, leilighetIds.length)
+                .mapToObj(i -> "?")
+                .collect(Collectors.joining(","));
+
         String sql = "SELECT U.ID, U.LEILIGHET_ID, U.UTGIFT_TYPE_ID, U.BELOP, U.AAR, U.MND, U.BESKRIVELSE AS UTGIFT_BESKRIVELSE," +
                 " UT.MAANEDUAVHENGIG, UT.NAVN AS UTGIFT_TYPE_NAVN, UT.BESKRIVELSE AS UTGIFT_TYPE_BESKRIVELSE " +
                 "FROM UTGIFT U, UTGIFT_TYPE UT WHERE " +
                 "U.UTGIFT_TYPE_ID = UT.ID AND " +
-                "LEILIGHET_ID = ? AND AAR = ? ORDER BY MND";
-        List<Utgift> utgiftList = jdbcTemplate.query(sql, new Object[]{leilighetId, aar}, new UtgiftMapper());
+                "LEILIGHET_ID IN (" + placeholders + ") AND AAR = ? ORDER BY MND";
+
+        Object[] params = new Object[leilighetIds.length + 1];
+        System.arraycopy(leilighetIds, 0, params, 0, leilighetIds.length);
+        params[leilighetIds.length] = aar;
+
+        List<Utgift> utgiftList = jdbcTemplate.query(sql, params, new UtgiftMapper());
         return utgiftList;
     }
 

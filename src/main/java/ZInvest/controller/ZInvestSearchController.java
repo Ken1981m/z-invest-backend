@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/search")
@@ -33,17 +34,17 @@ public class ZInvestSearchController{
 
     @CrossOrigin
     @GetMapping("/hentInntektRegnskap")
-    public List<InntektRequest> hentInntektRegnskap(@RequestParam String leilighetId,
+    public List<InntektRegnskapRequest> hentInntektRegnskap(@RequestParam String leilighetIds,
                                                     @RequestParam String aarliste) {
-        List<InntektRequest> inntektRequests = regnskapService.hentInntektRegnskapForFlereAar(leilighetId, aarliste);
-        return inntektRequests;
+        List<InntektRegnskapRequest> inntektRegnskapRequest = regnskapService.hentInntektRegnskapForFlereAar(leilighetIds, aarliste);
+        return inntektRegnskapRequest;
     }
 
     @CrossOrigin
     @GetMapping("/hentUtgiftRegnskap")
-    public List<UtgiftRequest> hentUtgiftRegnskap(@RequestParam String leilighetId,
+    public Map<String, List<UtgiftRegnskapRequest>> hentUtgiftRegnskap(@RequestParam String leilighetIds,
                                                   @RequestParam String aar) {
-        List<UtgiftRequest> utgiftRegnskap = regnskapService.hentUtgiftRegnskap(leilighetId, aar);
+        Map<String, List<UtgiftRegnskapRequest>> utgiftRegnskap = regnskapService.hentUtgiftRegnskap(leilighetIds, aar);
         return utgiftRegnskap;
     }
 

@@ -1,6 +1,7 @@
 package ZInvest.service;
 
 import ZInvest.domain.Leilighet;
+import ZInvest.domain.dto.InntektRegnskapRequest;
 import ZInvest.domain.dto.InntektRequest;
 import ZInvest.domain.dto.LeilighetRequest;
 import ZInvest.repository.ZInvestRepository;
@@ -41,7 +42,7 @@ class RegnskapServiceTest {
 
     @Test
     public void summerInntekt() {
-        List<InntektRequest> inntekter = hentTestInntekt();
+        List<InntektRegnskapRequest> inntekter = hentTestInntekt();
         Double sumInntekt = regnskapService.beregnSumInntekt(inntekter);
         assertThat(inntekter.get(0).getBelop() + inntekter.get(1).getBelop()).isEqualTo(sumInntekt);
     }
@@ -53,19 +54,19 @@ class RegnskapServiceTest {
         assertThat(res).isEqualTo(123.44);
     }
 
-    private List<InntektRequest> hentTestInntekt() {
-        InntektRequest inntekt1 = new InntektRequest.Builder()
+    private List<InntektRegnskapRequest> hentTestInntekt() {
+        InntektRegnskapRequest inntekt1 = new InntektRegnskapRequest.Builder()
                 .belop(10.5)
                 .build();
 
-        InntektRequest inntekt2 = new InntektRequest.Builder()
+        InntektRegnskapRequest inntekt2 = new InntektRegnskapRequest.Builder()
                 .belop(1.5)
                 .build();
 
-        List<InntektRequest> inntektRequestList = new ArrayList<>();
-        inntektRequestList.add(inntekt1);
-        inntektRequestList.add(inntekt2);
-        return inntektRequestList;
+        List<InntektRegnskapRequest> inntektRegnskapRequestList = new ArrayList<>();
+        inntektRegnskapRequestList.add(inntekt1);
+        inntektRegnskapRequestList.add(inntekt2);
+        return inntektRegnskapRequestList;
      }
 
     private List<Leilighet> hentTestLeilighet() {

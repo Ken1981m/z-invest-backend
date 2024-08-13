@@ -19,12 +19,15 @@ public class RegnskapService {
     DataService dataService;
 
 
-    public List<InntektRequest> hentInntektRegnskapForFlereAar(String leilighetId, String aarListe) {
+    public List<InntektRegnskapRequest> hentInntektRegnskapForFlereAar(String leilighetIds, String aarListe) {
+        Integer[] leilighetIdArray = Arrays.stream(leilighetIds.split(","))
+                .map(Integer::valueOf)
+                .toArray(Integer[]::new);
         String[] aarArray = aarListe.split(";");
 
-        List<InntektRequest> aktuelleAarList = new ArrayList<>();
+        List<InntektRegnskapRequest> aktuelleAarList = new ArrayList<>();
 
-        List<InntektRequest> inntektRegnskap = hentInntektRegnskap(leilighetId, aarArray[0]);
+        List<InntektRegnskapRequest> inntektRegnskap = hentInntektRegnskap(leilighetIdArray, aarArray[0]);
         if (!inntektRegnskap.isEmpty()) {
             aktuelleAarList.add(getAarRad(aarArray[0]));
         }
@@ -37,7 +40,7 @@ public class RegnskapService {
         });
 
         for (int i=1; i< aarArray.length; i++) {
-            List<InntektRequest> hentetRegnskap = hentInntektRegnskap(leilighetId, aarArray[i]);
+            List<InntektRegnskapRequest> hentetRegnskap = hentInntektRegnskap(leilighetIdArray, aarArray[i]);
             assembleInntektRegnskap(inntektRegnskap, hentetRegnskap);
 
             if (!hentetRegnskap.isEmpty()) {
@@ -45,18 +48,18 @@ public class RegnskapService {
             }
         }
 
-        List<InntektRequest> finalInntektRegnskap = new ArrayList<>(aktuelleAarList);
+        List<InntektRegnskapRequest> finalInntektRegnskap = new ArrayList<>(aktuelleAarList);
         finalInntektRegnskap.addAll(inntektRegnskap);
 
-        List<InntektRequest> finalInntektRegnskapWithAarListeForUtgifter = populerAarListeForUtgifter(finalInntektRegnskap);
+        List<InntektRegnskapRequest> finalInntektRegnskapWithAarListeForUtgifter = populerAarListeForUtgifter(finalInntektRegnskap);
 
         return finalInntektRegnskapWithAarListeForUtgifter;
     }
 
-    private List<InntektRequest> populerAarListeForUtgifter(List<InntektRequest> finalInntektRegnskap) {
+    private List<InntektRegnskapRequest> populerAarListeForUtgifter(List<InntektRegnskapRequest> finalInntektRegnskap) {
         List<String> alleAarMedData = finalInntektRegnskap
                 .stream()
-                .map(InntektRequest::getAar)
+                .map(InntektRegnskapRequest::getAar)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -69,63 +72,73 @@ public class RegnskapService {
         return finalInntektRegnskap;
     }
 
-    private void assembleInntektRegnskap(List<InntektRequest> inntektRegnskap, List<InntektRequest> hentetRegnskap) {
+    private void assembleInntektRegnskap(List<InntektRegnskapRequest> inntektRegnskap, List<InntektRegnskapRequest> hentetRegnskap) {
         if (inntektRegnskap.isEmpty()) {
             inntektRegnskap.addAll(hentetRegnskap);
         }
 
-        inntektRegnskap.forEach(inntektRequest -> {
+        inntektRegnskap.forEach(inntektRegnskapRequest -> {
             hentetRegnskap.forEach(hentetData -> {
-                if (inntektRequest.getLabel().equals(hentetData.getLabel())) {
-                    if (inntektRequest.getBelopList() == null) {
-                        inntektRequest.setBelopList(new ArrayList<>());
+                if (inntektRegnskapRequest.getLabel().equals(hentetData.getLabel())) {
+                    if (inntektRegnskapRequest.getBelopList() == null) {
+                        inntektRegnskapRequest.setBelopList(new ArrayList<>());
                     }
-                    inntektRequest.getBelopList().add(hentetData.getBelop());
+                    inntektRegnskapRequest.getBelopList().add(hentetData.getBelop());
                 }
             });
         });
     }
 
-    public List<UtgiftRequest> hentUtgiftRegnskap(String leilighetId, String aar) {
-        List<UtgiftRequest> utgiftRegnskap = new ArrayList<>();
+    public Map<String, List<UtgiftRegnskapRequest>> hentUtgiftRegnskap(String leilighetIds, String aar) {
+        Map<String, List<UtgiftRegnskapRequest>> utgiftRegnskapMap = new HashMap<>();
 
-        List<UtgiftRequest> utgiftRequests = AssemblerUtil.assembleUtgiftRequest(
-                repository.hentUtgift(Integer.parseInt(leilighetId), Integer.parseInt(aar))
+        Integer[] leilighetIdArray = Arrays.stream(leilighetIds.split(","))
+                .map(Integer::valueOf)
+                .toArray(Integer[]::new);
+
+        List<UtgiftRegnskapRequest> utgiftRegnskapRequests = AssemblerUtil.assembleUtgiftRegnskapRequest(
+                repository.hentUtgift(leilighetIdArray, Integer.parseInt(aar))
         );
 
-        if (!utgiftRequests.isEmpty()) {
-            AtomicInteger index = new AtomicInteger(1);
+        Arrays.asList(leilighetIds.split(",")).forEach(leilighetId -> {
 
-            List<String> utgiftTypeNavnListe = utgiftRequests.stream()
-                    .map(UtgiftRequest::getUtgiftTypeNavn)
-                    .distinct()
-                    .sorted()
-                    .collect(Collectors.toList());
+            List<UtgiftRegnskapRequest> utgiftRegnskap = new ArrayList<>();
 
-            utgiftTypeNavnListe.forEach(utgiftTypeNavn -> {
-                Double beregnetSumUtgift = beregnSumUtgifterPerUtgiftType(utgiftRequests, utgiftTypeNavn);
-                utgiftRegnskap.add(new UtgiftRequest.Builder()
-                        .id(index.getAndIncrement())
-                        .label(utgiftTypeNavn)
-                        .belop(beregnetSumUtgift)
-                        .build());
-            });
-        }
+            if (!utgiftRegnskapRequests.isEmpty()) {
+                List<String> utgiftTypeNavnListe = utgiftRegnskapRequests.stream()
+                        .map(UtgiftRegnskapRequest::getUtgiftTypeNavn)
+                        .distinct()
+                        .sorted()
+                        .collect(Collectors.toList());
 
-        List<UtgiftRequest> finalUtgiftRegnskap = populerMedUtgiftDetaljer(utgiftRegnskap, utgiftRequests);
+                utgiftTypeNavnListe.forEach(utgiftTypeNavn -> {
+                    Double beregnetSumUtgift = beregnSumUtgifterPerUtgiftType(leilighetId, utgiftRegnskapRequests, utgiftTypeNavn);
+                    utgiftRegnskap.add(new UtgiftRegnskapRequest.Builder()
+                            .label(utgiftTypeNavn)
+                            .belop(beregnetSumUtgift)
+                            .build());
+                });
+            }
 
-        return finalUtgiftRegnskap;
+            List<UtgiftRegnskapRequest> finalUtgiftRegnskap = populerMedUtgiftDetaljer(leilighetId, utgiftRegnskap, utgiftRegnskapRequests);
+
+            utgiftRegnskapMap.put(dataService.hentLeilighetNavn(leilighetId), finalUtgiftRegnskap);
+        });
+
+        return utgiftRegnskapMap;
     }
 
-    private List<UtgiftRequest> populerMedUtgiftDetaljer(
-            List<UtgiftRequest> utgiftRegnskap,
-            List<UtgiftRequest> utgiftRequests) {
+    private List<UtgiftRegnskapRequest> populerMedUtgiftDetaljer(
+            String leilighetId,
+            List<UtgiftRegnskapRequest> utgiftRegnskap,
+            List<UtgiftRegnskapRequest> utgiftRegnskapRequests) {
 
         utgiftRegnskap.forEach(utgift -> {
-            List<UtgiftRequest> detaljer = new ArrayList<>();
-            utgiftRequests.forEach(utgiftRequest -> {
-                if(utgift.getLabel().equals(utgiftRequest.getUtgiftTypeNavn())) {
-                    detaljer.add(utgiftRequest);
+            List<UtgiftRegnskapRequest> detaljer = new ArrayList<>();
+            utgiftRegnskapRequests.forEach(utgiftRegnskapRequest -> {
+                if(utgift.getLabel().equals(utgiftRegnskapRequest.getUtgiftTypeNavn()) &&
+                   utgiftRegnskapRequest.getLeilighetId().intValue() == Integer.parseInt(leilighetId)) {
+                    detaljer.add(utgiftRegnskapRequest);
                 }
             });
             utgift.setUtgiftDetaljer(AssemblerUtil.assembleUtgiftDetalj(detaljer));
@@ -135,76 +148,65 @@ public class RegnskapService {
     }
 
 
-    protected List<InntektRequest> hentInntektRegnskap(String leilighetId, String aar) {
-        List<InntektRequest> inntektRequests = AssemblerUtil.assembleInntektRequest(
-                repository.hentInntekt(Integer.parseInt(leilighetId), Integer.parseInt(aar)));
+    protected List<InntektRegnskapRequest> hentInntektRegnskap(Integer[] leilighetIdArray, String aar) {
+        List<InntektRegnskapRequest> inntektRegnskapRequests = AssemblerUtil.assembleInntektRegnskapRequest(
+                repository.hentInntekt(leilighetIdArray, Integer.parseInt(aar)));
 
         List<UtgiftRequest> utgiftRequests = AssemblerUtil.assembleUtgiftRequest(
-                repository.hentUtgift(Integer.parseInt(leilighetId), Integer.parseInt(aar))
+                repository.hentUtgift(leilighetIdArray, Integer.parseInt(aar))
         );
 
-        if (!inntektRequests.isEmpty()) {
-            int index = inntektRequests.stream()
-                    .mapToInt(InntektRequest::getId)
-                    .max().orElse(1) + 1;
+        if (!inntektRegnskapRequests.isEmpty()) {
+            addEmptyRow(inntektRegnskapRequests);
 
-            addEmptyRow(inntektRequests, index++);
-
-            Double sumBruttoInntekt = beregnSumInntekt(inntektRequests);
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            Double sumBruttoInntekt = beregnSumInntekt(inntektRegnskapRequests);
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.SUM_BRUTTO_INNTEKT.getString())
                     .belop(sumBruttoInntekt)
                     .build());
 
             Double alleUtgifter = beregnSumUtgifter(utgiftRequests);
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.SUM_UTGIFTER.getString())
                     .belop(alleUtgifter)
                     .build());
 
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.SUM_BRUTTO_INNTEKT_MINUS_ALLE_UTGIFTER.getString())
                     .belop(sumBruttoInntekt - alleUtgifter)
                     .build());
 
-            addEmptyRow(inntektRequests, index++);
+            addEmptyRow(inntektRegnskapRequests);
 
             Double estimertSkatt = (sumBruttoInntekt - alleUtgifter)  * 0.22;
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.ESTIMERT_SKATT.getString())
                     .belop(estimertSkatt)
                     .build());
 
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.FAKTISK_SKATT.getString())
                     .belop(0.0)
                     .build());
 
-            addEmptyRow(inntektRequests, index++);
+            addEmptyRow(inntektRegnskapRequests);
 
             Double estimertNettoInntekt = sumBruttoInntekt - alleUtgifter - estimertSkatt;
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.ESTIMERT_NETTO_INNTEKT.getString())
                     .belop(rundeAvBelop(estimertNettoInntekt))
                     .build());
 
-            inntektRequests.add(new InntektRequest.Builder()
-                    .id(index++)
+            inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.FAKTISK_NETTO_INNTEKT.getString())
                     .belop(0.0)
                     .build());
         }
 
-        return inntektRequests;
+        return inntektRegnskapRequests;
     }
 
-    public Double beregnSumInntekt(List<InntektRequest> inntekter) {
+    public Double beregnSumInntekt(List<InntektRegnskapRequest> inntekter) {
         return inntekter.stream().mapToDouble(inntekt -> inntekt.getBelop() != null ? inntekt.getBelop() : 0.0).sum();
     }
 
@@ -212,21 +214,24 @@ public class RegnskapService {
         return utgifter.stream().mapToDouble(utgift -> utgift.getBelop() != null ? utgift.getBelop() : 0.0).sum();
     }
 
-    public Double beregnSumUtgifterPerUtgiftType(List<UtgiftRequest> utgifter, String utgiftTypeNavn) {
+    public Double beregnSumUtgifterPerUtgiftType(String leilighetId,
+                                                 List<UtgiftRegnskapRequest> utgifter,
+                                                 String utgiftTypeNavn) {
         return utgifter.stream()
-                .filter(utgiftRequest -> utgiftRequest.getUtgiftTypeNavn().equals(utgiftTypeNavn))
+                .filter(utgiftRegnskapRequest ->
+                        utgiftRegnskapRequest.getUtgiftTypeNavn().equals(utgiftTypeNavn) &&
+                        utgiftRegnskapRequest.getLeilighetId().intValue() == Integer.parseInt(leilighetId))
                 .mapToDouble(utgift -> utgift.getBelop() != null ? utgift.getBelop() : 0.0).sum();
     }
 
-    private static void addEmptyRow(List<InntektRequest> inntektRequests, int index) {
-        inntektRequests.add(new InntektRequest.Builder()
-                .id(index)
+    private static void addEmptyRow(List<InntektRegnskapRequest> inntektRequests) {
+        inntektRequests.add(new InntektRegnskapRequest.Builder()
                 .label("")
                 .build());
     }
 
-    private InntektRequest getAarRad(String aar) {
-        return new InntektRequest.Builder()
+    private InntektRegnskapRequest getAarRad(String aar) {
+        return new InntektRegnskapRequest.Builder()
                 .aar(aar)
                 .build();
     }

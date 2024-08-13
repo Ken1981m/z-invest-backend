@@ -45,6 +45,18 @@ public class AssemblerUtil {
         return inntektRequests;
     }
 
+    public static List<InntektRegnskapRequest> assembleInntektRegnskapRequest(List<Inntekt> inntektList) {
+        List<InntektRegnskapRequest> inntektRegnskapRequests = new ArrayList<>();
+        inntektList.forEach(inntekt ->
+                inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
+                        .label(MaanedMap.hentMaaned(inntekt.getMnd()))
+                        .belop(inntekt.getBelop())
+                        .build()
+                )
+        );
+        return inntektRegnskapRequests;
+    }
+
     public static List<UtgiftRequest> assembleUtgiftRequest(List<Utgift> utgiftList) {
         List<UtgiftRequest> utgiftRequests = new ArrayList<>();
         utgiftList.forEach(utgift ->
@@ -64,6 +76,21 @@ public class AssemblerUtil {
         return utgiftRequests;
     }
 
+    public static List<UtgiftRegnskapRequest> assembleUtgiftRegnskapRequest(List<Utgift> utgiftList) {
+        List<UtgiftRegnskapRequest> utgiftRegnskapRequests = new ArrayList<>();
+        utgiftList.forEach(utgift ->
+                utgiftRegnskapRequests.add(new UtgiftRegnskapRequest.Builder()
+                        .leilighetId(utgift.getLeilighetId())
+                        .label(MaanedMap.hentMaaned(utgift.getMnd()))
+                        .belop(utgift.getBelop())
+                        .utgiftBeskrivelse(utgift.getBeskrivelse() != null ? utgift.getBeskrivelse() : "")
+                        .utgiftTypeNavn(utgift.getUtgiftTypeNavn())
+                        .build()
+                )
+        );
+        return utgiftRegnskapRequests;
+    }
+
     public static List<UtgiftTypeRequest> assembleUtgiftTypeRequest(List<UtgiftType> utgiftTypeList) {
         List<UtgiftTypeRequest> utgiftTypeRequests = new ArrayList<>();
         utgiftTypeList.forEach(utgiftType ->
@@ -78,12 +105,12 @@ public class AssemblerUtil {
         return utgiftTypeRequests;
     }
 
-    public static List<UtgiftDetalj> assembleUtgiftDetalj(List<UtgiftRequest> utgiftRequestList) {
+    public static List<UtgiftDetalj> assembleUtgiftDetalj(List<UtgiftRegnskapRequest> utgiftRegnskapRequestList) {
         List<UtgiftDetalj> utgiftDetaljer = new ArrayList<>();
-        utgiftRequestList.forEach(utgiftRequest ->
+        utgiftRegnskapRequestList.forEach(utgiftRegnskapRequest ->
             utgiftDetaljer.add(new UtgiftDetalj.Builder()
-                    .navn(utgiftRequest.getLabel() != null ? utgiftRequest.getLabel() : utgiftRequest.getUtgiftBeskrivelse())
-                    .belop(utgiftRequest.getBelop())
+                    .navn(utgiftRegnskapRequest.getLabel() != null ? utgiftRegnskapRequest.getLabel() : utgiftRegnskapRequest.getUtgiftBeskrivelse())
+                    .belop(utgiftRegnskapRequest.getBelop())
                     .build()
             )
         );

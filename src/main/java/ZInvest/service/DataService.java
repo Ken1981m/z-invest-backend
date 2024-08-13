@@ -157,6 +157,10 @@ public class DataService {
                 AssemblerUtil.assembleLeilighetRequest(leilighet)).collect(Collectors.toList());
     }
 
+    public String hentLeilighetNavn(String leilighetId) {
+        return repository.hentLeilighet(Integer.parseInt(leilighetId)).getNavn();
+    }
+
     public void setRepository(ZInvestRepository repository) {
         this.repository = repository;
     }
