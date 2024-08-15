@@ -6,7 +6,7 @@ public class Inntekt {
     private Leilighet leilighet;
     private int inntektTypeId;
     private InntektType inntektType;
-    private Double belop;
+    private Long belop;
     private Integer aar;
     private Integer mnd;
     private String beskrivelse;
@@ -39,7 +39,7 @@ public class Inntekt {
         this.inntektType = inntektType;
     }
 
-    public Double getBelop() {
+    public Long getBelop() {
         return belop;
     }
 
@@ -69,7 +69,7 @@ public class Inntekt {
         private int id;
         private int leilighetId;
         private int inntektTypeId;
-        private Double belop;
+        private Long belop;
         private Integer aar;
         private Integer mnd;
         private String beskrivelse;
@@ -92,7 +92,7 @@ public class Inntekt {
             return this;
         }
 
-        public Builder belop(Double belop) {
+        public Builder belop(Long belop) {
             this.belop = belop;
             return this;
         }

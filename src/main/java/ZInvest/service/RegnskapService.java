@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,7 +111,7 @@ public class RegnskapService {
                         .collect(Collectors.toList());
 
                 utgiftTypeNavnListe.forEach(utgiftTypeNavn -> {
-                    Double beregnetSumUtgift = beregnSumUtgifterPerUtgiftType(leilighetId, utgiftRegnskapRequests, utgiftTypeNavn);
+                    Long beregnetSumUtgift = Math.round(beregnSumUtgifterPerUtgiftType(leilighetId, utgiftRegnskapRequests, utgiftTypeNavn));
                     utgiftRegnskap.add(new UtgiftRegnskapRequest.Builder()
                             .label(utgiftTypeNavn)
                             .belop(beregnetSumUtgift)
@@ -159,13 +158,13 @@ public class RegnskapService {
         if (!inntektRegnskapRequests.isEmpty()) {
             addEmptyRow(inntektRegnskapRequests);
 
-            Double sumBruttoInntekt = beregnSumInntekt(inntektRegnskapRequests);
+            Long sumBruttoInntekt = Math.round(beregnSumInntekt(inntektRegnskapRequests));
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.SUM_BRUTTO_INNTEKT.getString())
                     .belop(sumBruttoInntekt)
                     .build());
 
-            Double alleUtgifter = beregnSumUtgifter(utgiftRequests);
+            Long alleUtgifter = Math.round(beregnSumUtgifter(utgiftRequests));
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.SUM_UTGIFTER.getString())
                     .belop(alleUtgifter)
@@ -178,7 +177,7 @@ public class RegnskapService {
 
             addEmptyRow(inntektRegnskapRequests);
 
-            Double estimertSkatt = (sumBruttoInntekt - alleUtgifter)  * 0.22;
+            Long estimertSkatt = Math.round((sumBruttoInntekt - alleUtgifter)  * 0.22);
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.ESTIMERT_SKATT.getString())
                     .belop(estimertSkatt)
@@ -186,20 +185,20 @@ public class RegnskapService {
 
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.FAKTISK_SKATT.getString())
-                    .belop(0.0)
+                    .belop(0L)
                     .build());
 
             addEmptyRow(inntektRegnskapRequests);
 
-            Double estimertNettoInntekt = sumBruttoInntekt - alleUtgifter - estimertSkatt;
+            Long estimertNettoInntekt = sumBruttoInntekt - alleUtgifter - estimertSkatt;
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.ESTIMERT_NETTO_INNTEKT.getString())
-                    .belop(rundeAvBelop(estimertNettoInntekt))
+                    .belop(estimertNettoInntekt)
                     .build());
 
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.FAKTISK_NETTO_INNTEKT.getString())
-                    .belop(0.0)
+                    .belop(0L)
                     .build());
         }
 
@@ -235,11 +234,6 @@ public class RegnskapService {
                 .aar(aar)
                 .build();
     }
-
-    public Double rundeAvBelop(Double value) {
-        return Math.round(value * 100.0) / 100.0;
-    }
-
 
     public void setRepository(ZInvestRepository repository) {
         this.repository = repository;

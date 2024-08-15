@@ -14,7 +14,7 @@ public class InntektMapper implements RowMapper<Inntekt> {
                 .id(rs.getInt("ID"))
                 .leilighetId(rs.getInt("LEILIGHET_ID"))
                 .inntektTypeId(rs.getInt("INNTEKT_TYPE_ID"))
-                .belop(rs.getDouble("BELOP"))
+                .belop(rs.getLong("BELOP"))
                 .aar(rs.getInt("AAR"))
                 .mnd(rs.getInt("MND"))
                 .beskrivelse(rs.getString("BESKRIVELSE"))

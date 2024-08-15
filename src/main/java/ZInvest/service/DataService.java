@@ -25,6 +25,22 @@ public class DataService {
         }
     }
 
+    public boolean oppdaterLeilighet(LeilighetFormData leilighetFormData) {
+        try {
+            return repository.oppdaterLeilighet(leilighetFormData);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean slettLeilighet(Integer id) {
+        try {
+            return repository.slettLeilighet(id);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean leggTilInntektType(InntektTypeFormData inntektTypeFormData) {
         try {
             return repository.leggtilInntektType(inntektTypeFormData);

@@ -5,7 +5,7 @@ import java.util.List;
 public class UtgiftRegnskapRequest {
     private Integer leilighetId;
     private String label;
-    private Double belop;
+    private Long belop;
     private String utgiftBeskrivelse;
     private String utgiftTypeNavn;
     private List<UtgiftDetalj> utgiftDetaljer;
@@ -18,7 +18,7 @@ public class UtgiftRegnskapRequest {
         return label;
     }
 
-    public Double getBelop() {
+    public Long getBelop() {
         return belop;
     }
 
@@ -50,7 +50,7 @@ public class UtgiftRegnskapRequest {
     public static class Builder {
         private Integer leilighetId;
         private String label;
-        private Double belop;
+        private Long belop;
         private String utgiftBeskrivelse;
         private String utgiftTypeNavn;
         private List<UtgiftDetalj> utgiftDetaljer;
@@ -68,7 +68,7 @@ public class UtgiftRegnskapRequest {
             return this;
         }
 
-        public Builder belop(Double belop) {
+        public Builder belop(Long belop) {
             this.belop = belop;
             return this;
         }

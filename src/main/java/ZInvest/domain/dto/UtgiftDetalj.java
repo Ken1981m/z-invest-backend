@@ -2,13 +2,13 @@ package ZInvest.domain.dto;
 
 public class UtgiftDetalj {
     private String navn;
-    private Double belop;
+    private Long belop;
 
     public String getNavn() {
         return navn;
     }
 
-    public Double getBelop() {
+    public Long getBelop() {
         return belop;
     }
 
@@ -19,7 +19,7 @@ public class UtgiftDetalj {
 
     public static class Builder {
         private String navn;
-        private Double belop;
+        private Long belop;
 
         public Builder() {
         }
@@ -29,7 +29,7 @@ public class UtgiftDetalj {
             return this;
         }
 
-        public Builder belop(Double belop) {
+        public Builder belop(Long belop) {
             this.belop = belop;
             return this;
         }

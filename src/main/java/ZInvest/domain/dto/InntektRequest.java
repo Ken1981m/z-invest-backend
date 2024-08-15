@@ -8,8 +8,8 @@ public class InntektRequest {
     private int mnd;
     private String aar;
     private String label;
-    private Double belop;
-    private List<Double> belopList; //Brukes for å vise inntekt for flere år på regnskap siden
+    private Long belop;
+    private List<Long> belopList; //Brukes for å vise inntekt for flere år på regnskap siden
     private List<String> aarList; //Brukes for å hente detaljer om utgifter på regnskap siden
     private String beskrivelse;
 
@@ -33,15 +33,19 @@ public class InntektRequest {
         return label;
     }
 
-    public Double getBelop() {
+    public Long getBelop() {
         return belop;
     }
 
-    public List<Double> getBelopList() {
+    public void setBelop(Long belop) {
+        this.belop = belop;
+    }
+
+    public List<Long> getBelopList() {
         return belopList;
     }
 
-    public void setBelopList(List<Double> belopList) {
+    public void setBelopList(List<Long> belopList) {
         this.belopList = belopList;
     }
 
@@ -73,8 +77,8 @@ public class InntektRequest {
         private int mnd;
         private String aar;
         private String label;
-        private Double belop;
-        private List<Double> belopList;
+        private Long belop;
+        private List<Long> belopList;
         private List<String> aarList;
         private String beskrivelse;
 
@@ -101,12 +105,12 @@ public class InntektRequest {
             return this;
         }
 
-        public Builder belop(Double belop) {
+        public Builder belop(Long belop) {
             this.belop = belop;
             return this;
         }
 
-        public Builder belopList(List<Double> belopList) {
+        public Builder belopList(List<Long> belopList) {
             this.belopList = belopList;
             return this;
         }

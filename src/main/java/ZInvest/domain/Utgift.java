@@ -9,7 +9,7 @@ public class Utgift {
     private String utgiftTypeNavn;
     private String utgiftTypeBeskrivelse;
     private UtgiftType utgiftType;
-    private Double belop;
+    private Long belop;
     private Integer aar;
     private Integer mnd;
     private String beskrivelse;
@@ -71,11 +71,11 @@ public class Utgift {
         this.utgiftType = utgiftType;
     }
 
-    public Double getBelop() {
+    public Long getBelop() {
         return belop;
     }
 
-    public void setBelop(Double belop) {
+    public void setBelop(Long belop) {
         this.belop = belop;
     }
 
@@ -130,7 +130,7 @@ public class Utgift {
         private Integer utgiftTypeId;
         private String utgiftTypeNavn;
         private String utgiftTypeBeskrivelse;
-        private Double belop;
+        private Long belop;
         private Integer aar;
         private Integer mnd;
         private String beskrivelse;
@@ -164,7 +164,7 @@ public class Utgift {
             return this;
         }
 
-        public Builder belop(Double belop) {
+        public Builder belop(Long belop) {
             this.belop = belop;
             return this;
         }

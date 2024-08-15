@@ -26,6 +26,18 @@ public class ZInvestPersistenceController {
     }
 
     @CrossOrigin
+    @PostMapping("/oppdaterLeilighet")
+    public boolean oppdaterLeilighet(@RequestBody LeilighetFormData leilighetFormData) {
+        return dataService.oppdaterLeilighet(leilighetFormData);
+    }
+
+    @CrossOrigin
+    @PostMapping("/slettLeilighet")
+    public boolean slettLeilighet(@RequestParam Integer id) {
+        return dataService.slettLeilighet(id);
+    }
+
+    @CrossOrigin
     @PostMapping("/leggTilInntektType")
     public boolean leggTilInntektType(@RequestBody InntektTypeFormData inntektTypeFormData) {
         return dataService.leggTilInntektType(inntektTypeFormData);

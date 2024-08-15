@@ -1,10 +1,7 @@
 package ZInvest.repository;
 
 import ZInvest.domain.*;
-import ZInvest.domain.dto.InntektFormData;
-import ZInvest.domain.dto.InntektTypeFormData;
-import ZInvest.domain.dto.UtgiftFormData;
-import ZInvest.domain.dto.UtgiftTypeFormData;
+import ZInvest.domain.dto.*;
 import ZInvest.mapping.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,6 +26,23 @@ public class ZInvestRepository {
                 leilighet.getAdresse(),
                 leilighet.getPostNr(),
                 leilighet.getPostSted());
+        return true;
+    }
+
+    public boolean oppdaterLeilighet(LeilighetFormData leilighetFormData) {
+        String sql = "UPDATE LEILIGHET SET navn = ?, adresse = ?, postnr = ?, poststed = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                leilighetFormData.getNavn(),
+                leilighetFormData.getAdresse(),
+                leilighetFormData.getPostnr(),
+                leilighetFormData.getPoststed(),
+                leilighetFormData.getId());
+        return true;
+    }
+
+    public boolean slettLeilighet(Integer id) {
+        String sql = "DELETE FROM LEILIGHET WHERE id = ?";
+        jdbcTemplate.update(sql, id);
         return true;
     }
 
@@ -252,6 +266,5 @@ public class ZInvestRepository {
         String sql = "SELECT ID, NAVN, ADRESSE, POSTNR, POSTSTED FROM LEILIGHET ORDER BY NAVN";
         return jdbcTemplate.query(sql, new LeilighetMapper());
     }
-
 
 }

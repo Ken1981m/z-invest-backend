@@ -16,7 +16,7 @@ public class UtgiftMapper implements RowMapper<Utgift> {
                 .utgiftTypeId(rs.getInt("UTGIFT_TYPE_ID"))
                 .utgiftTypeNavn(rs.getString("UTGIFT_TYPE_NAVN"))
                 .utgiftTypeBeskrivelse(rs.getString("UTGIFT_TYPE_BESKRIVELSE"))
-                .belop(rs.getDouble("BELOP"))
+                .belop(rs.getLong("BELOP"))
                 .aar(rs.getInt("AAR"))
                 .mnd(rs.getInt("MND"))
                 .beskrivelse(rs.getString("UTGIFT_BESKRIVELSE"))

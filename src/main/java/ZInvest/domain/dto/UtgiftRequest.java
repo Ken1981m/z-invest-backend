@@ -7,7 +7,7 @@ public class UtgiftRequest {
     private int id;
     private int mnd;
     private String label;
-    private Double belop;
+    private Long belop;
     private String utgiftBeskrivelse;
     private Boolean mndUavhengig;
     private Integer utgiftTypeId;
@@ -27,7 +27,7 @@ public class UtgiftRequest {
         return label;
     }
 
-    public Double getBelop() {
+    public Long getBelop() {
         return belop;
     }
 
@@ -76,7 +76,7 @@ public class UtgiftRequest {
         private int id;
         private int mnd;
         private String label;
-        private Double belop;
+        private Long belop;
         private String utgiftBeskrivelse;
         private Boolean mndUavhengig;
         private Integer utgiftTypeId;
@@ -102,7 +102,7 @@ public class UtgiftRequest {
             return this;
         }
 
-        public Builder belop(Double belop) {
+        public Builder belop(Long belop) {
             this.belop = belop;
             return this;
         }

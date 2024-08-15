@@ -11,7 +11,7 @@ public class InntektRegnskapMapper implements RowMapper<Inntekt> {
     @Override
     public Inntekt mapRow(ResultSet rs, int rowNum) throws SQLException {
         Inntekt inntekt = new Inntekt.Builder()
-                .belop(rs.getDouble("BELOP"))
+                .belop(rs.getLong("BELOP"))
                 .aar(rs.getInt("AAR"))
                 .mnd(rs.getInt("MND"))
                 .build();
