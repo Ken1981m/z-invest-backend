@@ -14,6 +14,7 @@ public class GrupperingLeilighetMapper implements RowMapper<GrupperingLeilighet>
                 .id(rs.getInt("GRUPPERING_ID"))
                 .grupperingNavn(rs.getString("GRUPPERING_NAVN"))
                 .leilighetNavn(rs.getString("LEILIGHET_NAVN"))
+                .leilighetId(rs.getInt("LEILIGHET_ID"))
                 .build();
         return grupperingLeilighet;
     }

@@ -1,11 +1,15 @@
 package ZInvest.service;
 
+import ZInvest.domain.FaktiskBetaltSkatt;
+import ZInvest.domain.GrupperingBase;
+import ZInvest.domain.GrupperingLeilighet;
 import ZInvest.domain.dto.*;
 import ZInvest.repository.ZInvestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -185,9 +189,10 @@ public class RegnskapService {
                     .belop(estimertSkatt)
                     .build());
 
+            Long faktiskSkatt = Math.round(beregnFaktiskSkatt(leilighetIdArray, aar));
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.FAKTISK_SKATT.getString())
-                    .belop(0L)
+                    .belop(faktiskSkatt)
                     .build());
 
             addEmptyRow(inntektRegnskapRequests);
@@ -198,9 +203,10 @@ public class RegnskapService {
                     .belop(estimertNettoInntekt)
                     .build());
 
+            Long faktiskNettoInntekt = sumBruttoInntekt - alleUtgifter - faktiskSkatt;
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.FAKTISK_NETTO_INNTEKT.getString())
-                    .belop(0L)
+                    .belop(faktiskNettoInntekt)
                     .build());
         }
 
@@ -223,6 +229,57 @@ public class RegnskapService {
                         utgiftRegnskapRequest.getUtgiftTypeNavn().equals(utgiftTypeNavn) &&
                         utgiftRegnskapRequest.getLeilighetId().intValue() == Integer.parseInt(leilighetId))
                 .mapToDouble(utgift -> utgift.getBelop() != null ? utgift.getBelop() : 0.0).sum();
+    }
+
+    public Double beregnFaktiskSkatt(Integer[] leilighetIdArray, String aar) {
+        Map<Integer, List<Integer>> gruppertLeilighetMap = hentGrupperteLeiligheter();
+
+        int gruppertBaseId = hentGrupperingBaseIdBasertPaaValgteLeiligheter(leilighetIdArray, gruppertLeilighetMap);
+
+        if (gruppertBaseId > -1) {
+            FaktiskBetaltSkatt faktiskBetaltSkatt = repository.hentFaktiskBetaltSkatt(gruppertBaseId, Integer.parseInt(aar));
+            return (double) (faktiskBetaltSkatt.getFaktiskSkattBelopEtterUtleieUtfyltISkattemelding() - faktiskBetaltSkatt.getFaktiskSkattBelopForUtleieUtfyltISkattemelding());
+        }
+
+        return 0.0;
+    }
+
+    private int hentGrupperingBaseIdBasertPaaValgteLeiligheter( Integer[] leilighetIdArray,
+                                                                Map<Integer, List<Integer>> gruppertLeilighetMap) {
+        AtomicInteger grupperingBaseId = new AtomicInteger(-1);
+
+        gruppertLeilighetMap.forEach((key, value) -> {
+            if (harAlleRelevanteLeilighetForGruppertBase(leilighetIdArray, gruppertLeilighetMap.get(key))) {
+                grupperingBaseId.set(key);
+            }
+        });
+
+        return grupperingBaseId.get();
+    }
+
+    private boolean harAlleRelevanteLeilighetForGruppertBase(Integer[] leilighetIdArray,
+                                                             List<Integer> grupperteLeiligheter) {
+        Set<Integer> valgteLeilighetIds = new HashSet<>(Arrays.asList(leilighetIdArray));
+
+        for (Integer gruppertLeilighet : grupperteLeiligheter) {
+            if (!valgteLeilighetIds.contains(gruppertLeilighet)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Map<Integer, List<Integer>> hentGrupperteLeiligheter() {
+        Map<Integer, List<Integer>> grupperteLeilighetMap = new HashMap<>();
+
+        List<GrupperingBase> grupperingBaseIdList = repository.hentGrupperingBaser();
+        grupperingBaseIdList.stream().forEach(grupperingBase -> {
+            List<GrupperingLeilighet> grupperteLeiligheter = repository.hentGrupperteLeilighet(grupperingBase.getId());
+            grupperteLeilighetMap.put(grupperingBase.getId(),
+                    grupperteLeiligheter.stream().map(GrupperingLeilighet::getLeilighetId)
+                            .collect(Collectors.toList()));
+        });
+        return grupperteLeilighetMap;
     }
 
     private static void addEmptyRow(List<InntektRegnskapRequest> inntektRequests) {

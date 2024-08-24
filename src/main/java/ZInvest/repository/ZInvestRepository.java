@@ -308,13 +308,19 @@ public class ZInvestRepository {
         return jdbcTemplate.query(sql, new Object[]{grupperingId}, new FaktiskBetaltSkattMapper());
     }
 
+    public FaktiskBetaltSkatt hentFaktiskBetaltSkatt(Integer grupperingId, Integer aar) {
+        String sql = "SELECT ID, GRUPPERING_ID, AAR, FAKTISK_SKATT_BELOP_FOR_UTLEIE, FAKTISK_SKATT_BELOP_ETTER_UTLEIE " +
+                "FROM FAKTISK_BETALT_SKATT WHERE GRUPPERING_ID = ? AND AAR = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{grupperingId, aar}, new FaktiskBetaltSkattMapper());
+    }
+
     public List<GrupperingBase> hentGrupperingBaser() {
-        String sql = "SELECT ID, GRUPPERING_NAVN FROM GRUPPERING_BASE";
+        String sql = "SELECT ID, GRUPPERING_NAVN FROM GRUPPERING_BASE ORDER BY GRUPPERING_NAVN";
         return jdbcTemplate.query(sql, new GrupperingBaseMapper());
     }
 
     public List<GrupperingLeilighet> hentGrupperteLeilighet(Integer grupperingId) {
-        String sql = "SELECT GB.ID AS GRUPPERING_ID, GB.GRUPPERING_NAVN, L.NAVN AS LEILIGHET_NAVN " +
+        String sql = "SELECT GB.ID AS GRUPPERING_ID, GB.GRUPPERING_NAVN, L.NAVN AS LEILIGHET_NAVN, L.ID as LEILIGHET_ID " +
                 "FROM GRUPPERING_BASE GB, GRUPPERTE_LEILIGHETER GL, LEILIGHET L " +
                 "WHERE GB.ID = GL.GRUPPERING_ID AND GL.LEILIGHET_ID = L.ID " +
                 "AND GB.ID = ? ORDER BY L.NAVN";

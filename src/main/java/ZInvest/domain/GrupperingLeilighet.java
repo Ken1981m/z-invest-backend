@@ -4,6 +4,7 @@ public class GrupperingLeilighet {
     private int id;
     private String grupperingNavn;
     private String leilighetNavn;
+    private int leilighetId;
 
     public int getId() {
         return id;
@@ -17,16 +18,22 @@ public class GrupperingLeilighet {
         return leilighetNavn;
     }
 
+    public int getLeilighetId() {
+        return leilighetId;
+    }
+
     private GrupperingLeilighet(Builder builder) {
         this.id = builder.id;
         this.grupperingNavn = builder.grupperingNavn;
         this.leilighetNavn = builder.leilighetNavn;
+        this.leilighetId = builder.leilighetId;
     }
 
     public static class Builder {
         private int id;
         private String grupperingNavn;
         private String leilighetNavn;
+        private int leilighetId;
 
         public Builder() {
         }
@@ -43,6 +50,11 @@ public class GrupperingLeilighet {
 
         public Builder leilighetNavn(String leilighetNavn) {
             this.leilighetNavn = leilighetNavn;
+            return this;
+        }
+
+        public Builder leilighetId(int leilighetId) {
+            this.leilighetId = leilighetId;
             return this;
         }
 
