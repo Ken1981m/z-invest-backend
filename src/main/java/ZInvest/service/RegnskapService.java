@@ -177,7 +177,9 @@ public class RegnskapService {
 
             addEmptyRow(inntektRegnskapRequests);
 
-            Long estimertSkatt = Math.round((sumBruttoInntekt - alleUtgifter)  * 0.22);
+
+            Long estimertSkatt = Math.round((sumBruttoInntekt - alleUtgifter)  *
+                    (repository.hentSkatteprosent(Integer.parseInt(aar)) / 100.0));
             inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
                     .label(ConstantsMap.ESTIMERT_SKATT.getString())
                     .belop(estimertSkatt)

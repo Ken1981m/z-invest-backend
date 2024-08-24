@@ -1,5 +1,7 @@
 package ZInvest.service;
 
+import ZInvest.domain.GrupperingBase;
+import ZInvest.domain.GrupperingLeilighet;
 import ZInvest.domain.Leilighet;
 import ZInvest.domain.UtgiftType;
 import ZInvest.domain.dto.*;
@@ -175,6 +177,49 @@ public class DataService {
 
     public String hentLeilighetNavn(String leilighetId) {
         return repository.hentLeilighet(Integer.parseInt(leilighetId)).getNavn();
+    }
+
+    public List<SkatteprosentRequest> hentSkatteprosent() {
+        return repository.hentSkatteprosent().stream().map(skatteprosent ->
+                AssemblerUtil.assembleSkatteprosentRequest(skatteprosent)).collect(Collectors.toList());
+    }
+
+    public boolean leggTilSkatteprosent(SkatteprosentFormData skatteprosentFormData) {
+        return repository.leggTilSkatteprosent(skatteprosentFormData);
+    }
+
+    public boolean oppdaterSkatteprosent(SkatteprosentFormData skatteprosentFormData) {
+        return repository.oppdaterSkatteprosent(skatteprosentFormData);
+    }
+
+    public boolean slettSkatteprosent(Integer id) {
+        return repository.slettSkatteprosent(id);
+    }
+
+    public List<FaktiskBetaltSkattRequest> hentFaktiskBetaltSkatt(Integer grupperingId) {
+        return repository.hentFaktiskBetaltSkatt(grupperingId).stream().map(faktiskBetaltSkatt ->
+                AssemblerUtil.assembleFaktiskBetaltSkattRequest(faktiskBetaltSkatt)).collect(Collectors.toList());
+    }
+
+    public List<GrupperingBase> hentGrupperingBaser() {
+        return repository.hentGrupperingBaser();
+    }
+
+    public List<GrupperingLeilighet> hentGrupperingLeilighet(Integer grupperingId) {
+        return repository.hentGrupperteLeilighet(grupperingId);
+    }
+
+
+    public boolean leggTilFaktiskBetaltSkatt(FaktiskSkattFormData faktiskSkattFormData) {
+        return repository.leggTilFaktiskBetaltSkatt(faktiskSkattFormData);
+    }
+
+    public boolean oppdaterFaktiskBetaltSkatt(FaktiskSkattFormData faktiskSkattFormData) {
+        return repository.oppdaterFaktiskBetaltSkatt(faktiskSkattFormData);
+    }
+
+    public boolean slettFaktiskBetaltSkatt(Integer id) {
+        return repository.slettFaktiskBetaltSkatt(id);
     }
 
     public void setRepository(ZInvestRepository repository) {

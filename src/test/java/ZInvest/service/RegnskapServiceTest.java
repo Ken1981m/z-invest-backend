@@ -58,6 +58,7 @@ class RegnskapServiceTest {
     void testHentInntektRegnskapForFlereAar() {
         String leilighetIds = "1,2";
         String aarListe = "2021;2022";
+        when(repository.hentSkatteprosent(anyInt())).thenReturn(22L);
         when(repository.hentInntekt(any(Integer[].class), eq(2021))).thenReturn(hentTestInntektForRegnskapFor2021());
         when(repository.hentInntekt(any(Integer[].class), eq(2022))).thenReturn(hentTestInntektForRegnskapFor2022());
         when(repository.hentUtgift(any(Integer[].class), eq(2021))).thenReturn(hentTestUtgiftForRegnskapFor2021());

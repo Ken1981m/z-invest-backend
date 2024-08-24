@@ -1,5 +1,7 @@
 package ZInvest.controller;
 
+import ZInvest.domain.GrupperingBase;
+import ZInvest.domain.GrupperingLeilighet;
 import ZInvest.domain.dto.*;
 import ZInvest.service.DataService;
 import ZInvest.service.RegnskapService;
@@ -73,5 +75,29 @@ public class ZInvestSearchController{
     @GetMapping("/hentLeiligheter")
     public List<LeilighetRequest> hentLeiligheter() {
         return dataService.hentLeiligheter();
+    }
+
+    @CrossOrigin
+    @GetMapping("/hentSkatteprosent")
+    public List<SkatteprosentRequest> hentSkatteprosent() {
+        return dataService.hentSkatteprosent();
+    }
+
+    @CrossOrigin
+    @GetMapping("/hentGrupperingBaser")
+    public List<GrupperingBase> hentGrupperingBaser() {
+        return dataService.hentGrupperingBaser();
+    }
+
+    @CrossOrigin
+    @GetMapping("/hentGrupperingLeilighet")
+    public List<GrupperingLeilighet> hentGrupperingLeilighet(@RequestParam Integer grupperingId) {
+        return dataService.hentGrupperingLeilighet(grupperingId);
+    }
+
+    @CrossOrigin
+    @GetMapping("/hentFaktiskBetaltSkatt")
+    public List<FaktiskBetaltSkattRequest> hentFaktiskBetaltSkatt(@RequestParam Integer grupperingId) {
+        return dataService.hentFaktiskBetaltSkatt(grupperingId);
     }
 }

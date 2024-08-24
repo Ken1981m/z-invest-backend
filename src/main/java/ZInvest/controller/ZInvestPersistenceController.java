@@ -108,4 +108,40 @@ public class ZInvestPersistenceController {
     public boolean slettUtgift(@RequestParam Integer id) {
         return dataService.slettUtgift(id);
     }
+
+    @CrossOrigin
+    @PostMapping("/leggTilSkatteprosent")
+    public boolean leggTilSkatteprosent(@RequestBody SkatteprosentFormData skatteprosentFormData) {
+        return dataService.leggTilSkatteprosent(skatteprosentFormData);
+    }
+
+    @CrossOrigin
+    @PostMapping("/oppdaterSkatteprosent")
+    public boolean oppdaterSkatteprosent(@RequestBody SkatteprosentFormData skatteprosentFormData) {
+        return dataService.oppdaterSkatteprosent(skatteprosentFormData);
+    }
+
+    @CrossOrigin
+    @PostMapping("/slettSkatteprosent")
+    public boolean slettSkatteprosent(@RequestParam Integer id) {
+        return dataService.slettSkatteprosent(id);
+    }
+
+    @CrossOrigin
+    @PostMapping("/leggTilFaktiskBetaltSkatt")
+    public boolean leggTilFaktiskBetaltSkatt(@RequestBody FaktiskSkattFormData faktiskSkattFormData) {
+        return dataService.leggTilFaktiskBetaltSkatt(faktiskSkattFormData);
+    }
+
+    @CrossOrigin
+    @PostMapping("/oppdaterFaktiskBetaltSkatt")
+    public boolean oppdaterFaktiskBetaltSkatt(@RequestBody FaktiskSkattFormData faktiskSkattFormData) {
+        return dataService.oppdaterFaktiskBetaltSkatt(faktiskSkattFormData);
+    }
+
+    @CrossOrigin
+    @PostMapping("/slettFaktiskBetaltSkatt")
+    public boolean slettFaktiskBetaltSkatt(@RequestParam Integer id) {
+        return dataService.slettFaktiskBetaltSkatt(id);
+    }
 }

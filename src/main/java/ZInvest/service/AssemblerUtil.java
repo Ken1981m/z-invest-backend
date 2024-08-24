@@ -127,4 +127,21 @@ public class AssemblerUtil {
                 .postSted(leilighet.getPostSted())
                 .build();
     }
+
+    public static SkatteprosentRequest assembleSkatteprosentRequest(Skatteprosent skatteprosent) {
+        return new SkatteprosentRequest.Builder()
+                .id(skatteprosent.getId())
+                .aar(skatteprosent.getAar())
+                .skatteprosent(skatteprosent.getSkatteprosent())
+                .build();
+    }
+
+    public static FaktiskBetaltSkattRequest assembleFaktiskBetaltSkattRequest(FaktiskBetaltSkatt faktiskBetaltSkatt) {
+        return new FaktiskBetaltSkattRequest.Builder()
+                .id(faktiskBetaltSkatt.getId())
+                .aar(faktiskBetaltSkatt.getAar())
+                .faktiskSkattBelopForUtleieUtfyltISkattemelding(faktiskBetaltSkatt.getFaktiskSkattBelopForUtleieUtfyltISkattemelding())
+                .faktiskSkattBelopEtterUtleieUtfyltISkattemelding(faktiskBetaltSkatt.getFaktiskSkattBelopEtterUtleieUtfyltISkattemelding())
+                .build();
+    }
 }

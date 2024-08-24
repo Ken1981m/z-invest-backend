@@ -267,4 +267,86 @@ public class ZInvestRepository {
         return jdbcTemplate.query(sql, new LeilighetMapper());
     }
 
+    public Long hentSkatteprosent(int aar) {
+        String sql = "SELECT SKATTEPROSENT FROM SKATTEPROSENT WHERE AAR = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{aar}, Long.class);
+    }
+
+    public List<Skatteprosent> hentSkatteprosent() {
+        String sql = "SELECT ID, AAR, SKATTEPROSENT FROM SKATTEPROSENT ORDER BY AAR";
+        return jdbcTemplate.query(sql, new SkatteprosentMapper());
+    }
+
+    public boolean leggTilSkatteprosent(SkatteprosentFormData skatteprosentFormData) {
+        String sql = "INSERT INTO SKATTEPROSENT (AAR, SKATTEPROSENT) " +
+                "VALUES (?, ?)";
+        jdbcTemplate.update(sql,
+               skatteprosentFormData.getAar(),
+               skatteprosentFormData.getSkatteprosent()
+        );
+
+        return true;
+    }
+
+    public boolean oppdaterSkatteprosent(SkatteprosentFormData skatteprosentFormData) {
+        String sql = "UPDATE SKATTEPROSENT SET SKATTEPROSENT = ? WHERE ID = ?";
+        jdbcTemplate.update(sql,
+                skatteprosentFormData.getSkatteprosent(),
+                skatteprosentFormData.getId());
+        return true;
+    }
+
+    public boolean slettSkatteprosent(Integer id) {
+        String sql = "DELETE FROM SKATTEPROSENT WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+        return true;
+    }
+
+    public List<FaktiskBetaltSkatt> hentFaktiskBetaltSkatt(Integer grupperingId) {
+        String sql = "SELECT ID, GRUPPERING_ID, AAR, FAKTISK_SKATT_BELOP_FOR_UTLEIE, FAKTISK_SKATT_BELOP_ETTER_UTLEIE " +
+                "FROM FAKTISK_BETALT_SKATT WHERE GRUPPERING_ID = ? ORDER BY AAR";
+        return jdbcTemplate.query(sql, new Object[]{grupperingId}, new FaktiskBetaltSkattMapper());
+    }
+
+    public List<GrupperingBase> hentGrupperingBaser() {
+        String sql = "SELECT ID, GRUPPERING_NAVN FROM GRUPPERING_BASE";
+        return jdbcTemplate.query(sql, new GrupperingBaseMapper());
+    }
+
+    public List<GrupperingLeilighet> hentGrupperteLeilighet(Integer grupperingId) {
+        String sql = "SELECT GB.ID AS GRUPPERING_ID, GB.GRUPPERING_NAVN, L.NAVN AS LEILIGHET_NAVN " +
+                "FROM GRUPPERING_BASE GB, GRUPPERTE_LEILIGHETER GL, LEILIGHET L " +
+                "WHERE GB.ID = GL.GRUPPERING_ID AND GL.LEILIGHET_ID = L.ID " +
+                "AND GB.ID = ? ORDER BY L.NAVN";
+        return jdbcTemplate.query(sql, new Object[]{grupperingId}, new GrupperingLeilighetMapper());
+    }
+
+    public boolean leggTilFaktiskBetaltSkatt(FaktiskSkattFormData faktiskSkattFormData) {
+        String sql = "INSERT INTO FAKTISK_BETALT_SKATT (GRUPPERING_ID, AAR, FAKTISK_SKATT_BELOP_FOR_UTLEIE, FAKTISK_SKATT_BELOP_ETTER_UTLEIE) " +
+                "VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                faktiskSkattFormData.getGrupperingId(),
+                faktiskSkattFormData.getAar(),
+                faktiskSkattFormData.getFaktiskSkattBelopForUtleieUtfyltISkattemelding(),
+                faktiskSkattFormData.getFaktiskSkattBelopEtterUtleieUtfyltISkattemelding()
+        );
+        return true;
+    }
+
+    public boolean oppdaterFaktiskBetaltSkatt(FaktiskSkattFormData faktiskSkattFormData) {
+        String sql = "UPDATE FAKTISK_BETALT_SKATT SET FAKTISK_SKATT_BELOP_FOR_UTLEIE = ?, " +
+                "FAKTISK_SKATT_BELOP_ETTER_UTLEIE = ? WHERE AAR = ? AND GRUPPERING_ID = ?";
+        jdbcTemplate.update(sql,
+                faktiskSkattFormData.getFaktiskSkattBelopForUtleieUtfyltISkattemelding(),
+                faktiskSkattFormData.getFaktiskSkattBelopEtterUtleieUtfyltISkattemelding(),
+                faktiskSkattFormData.getAar(),
+                faktiskSkattFormData.getGrupperingId());
+        return true;
+    }
+
+    public boolean slettFaktiskBetaltSkatt(Integer id) {
+        String sql = "DELETE FROM FAKTISK_BETALT_SKATT WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+        return true;
+    }
 }
