@@ -16,6 +16,7 @@ public class LeilighetMapper implements RowMapper<Leilighet> {
                 .adresse(rs.getString("ADRESSE"))
                 .postNr(rs.getString("POSTNR"))
                 .postSted(rs.getString("POSTSTED"))
+                .beskrivelse(rs.getString("BESKRIVELSE"))
                 .build();
         return leilighet;
     }

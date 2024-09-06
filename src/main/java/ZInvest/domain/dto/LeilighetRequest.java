@@ -7,12 +7,14 @@ public class LeilighetRequest {
     private String adresse;
     private String postnr;
     private String poststed;
+    private String beskrivelse;
 
-    public LeilighetRequest(String navn, String adresse, String postNr, String poststed) {
+    public LeilighetRequest(String navn, String adresse, String postNr, String poststed, String beskrivelse) {
         this.navn = navn;
         this.adresse = adresse;
         this.postnr = postNr;
         this.poststed = poststed;
+        this.beskrivelse = beskrivelse;
     }
 
     public int getId() {
@@ -55,7 +57,13 @@ public class LeilighetRequest {
         this.poststed = poststed;
     }
 
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
 
+    public void setBeskrivelse(String beskrivelse) {
+        this.beskrivelse = beskrivelse;
+    }
 
     private LeilighetRequest(Builder builder) {
         this.id = builder.id;
@@ -63,6 +71,7 @@ public class LeilighetRequest {
         this.adresse = builder.adresse;
         this.postnr = builder.postnr;
         this.poststed = builder.poststed;
+        this.beskrivelse = builder.beskrivelse;
     }
 
     public static class Builder {
@@ -71,6 +80,7 @@ public class LeilighetRequest {
         private String adresse;
         private String postnr;
         private String poststed;
+        private String beskrivelse;
 
         public Builder() {
         }
@@ -97,6 +107,11 @@ public class LeilighetRequest {
 
         public Builder postSted(String postSted) {
             this.poststed = postSted;
+            return this;
+        }
+
+        public Builder beskrivelse(String beskrivelse) {
+            this.beskrivelse = beskrivelse;
             return this;
         }
 

@@ -7,6 +7,7 @@ public class LeilighetFormData {
     private String adresse;
     private String postnr;
     private String poststed;
+    private String beskrivelse;
 
     public Integer getId() {
         return id;
@@ -26,5 +27,9 @@ public class LeilighetFormData {
 
     public String getPoststed() {
         return poststed;
+    }
+
+    public String getBeskrivelse() {
+        return beskrivelse;
     }
 }

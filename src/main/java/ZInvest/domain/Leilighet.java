@@ -6,6 +6,7 @@ public class Leilighet {
     private String adresse;
     private String postNr;
     private String postSted;
+    private String beskrivelse;
 
     public int getId() {
         return id;
@@ -27,12 +28,17 @@ public class Leilighet {
         return postSted;
     }
 
+    public String getBeskrivelse() {
+        return beskrivelse;
+    }
+
     private Leilighet(Builder builder) {
         this.id = builder.id;
         this.navn = builder.navn;
         this.adresse = builder.adresse;
         this.postNr = builder.postNr;
         this.postSted = builder.postSted;
+        this.beskrivelse = builder.beskrivelse;
     }
 
     public static class Builder {
@@ -41,6 +47,7 @@ public class Leilighet {
         private String adresse;
         private String postNr;
         private String postSted;
+        private String beskrivelse;
 
         public Builder() {
         }
@@ -67,6 +74,11 @@ public class Leilighet {
 
         public Builder postSted(String postSted) {
             this.postSted = postSted;
+            return this;
+        }
+
+        public Builder beskrivelse(String beskrivelse) {
+            this.beskrivelse = beskrivelse;
             return this;
         }
 

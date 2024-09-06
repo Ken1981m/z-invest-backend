@@ -20,22 +20,24 @@ public class ZInvestRepository {
     }
 
     public boolean leggTilLeilighet(Leilighet leilighet) {
-        String sql = "INSERT INTO LEILIGHET (NAVN, ADRESSE, POSTNR, POSTSTED) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO LEILIGHET (NAVN, ADRESSE, POSTNR, POSTSTED, BESKRIVELSE) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 leilighet.getNavn(),
                 leilighet.getAdresse(),
                 leilighet.getPostNr(),
-                leilighet.getPostSted());
+                leilighet.getPostSted(),
+                leilighet.getBeskrivelse());
         return true;
     }
 
     public boolean oppdaterLeilighet(LeilighetFormData leilighetFormData) {
-        String sql = "UPDATE LEILIGHET SET navn = ?, adresse = ?, postnr = ?, poststed = ? WHERE id = ?";
+        String sql = "UPDATE LEILIGHET SET navn = ?, adresse = ?, postnr = ?, poststed = ?, beskrivelse = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 leilighetFormData.getNavn(),
                 leilighetFormData.getAdresse(),
                 leilighetFormData.getPostnr(),
                 leilighetFormData.getPoststed(),
+                leilighetFormData.getBeskrivelse(),
                 leilighetFormData.getId());
         return true;
     }
@@ -263,7 +265,7 @@ public class ZInvestRepository {
     }
 
     public List<Leilighet> hentLeiligheter() {
-        String sql = "SELECT ID, NAVN, ADRESSE, POSTNR, POSTSTED FROM LEILIGHET ORDER BY NAVN";
+        String sql = "SELECT ID, NAVN, ADRESSE, POSTNR, POSTSTED, BESKRIVELSE FROM LEILIGHET ORDER BY NAVN";
         return jdbcTemplate.query(sql, new LeilighetMapper());
     }
 

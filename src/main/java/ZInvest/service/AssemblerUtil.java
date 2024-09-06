@@ -14,6 +14,7 @@ public class AssemblerUtil {
                 .adresse(leilighetRequest.getAdresse())
                 .postNr(leilighetRequest.getPostnr())
                 .postSted(leilighetRequest.getPoststed())
+                .beskrivelse(leilighetRequest.getBeskrivelse())
                 .build();
     }
 
@@ -125,6 +126,7 @@ public class AssemblerUtil {
                 .adresse(leilighet.getAdresse())
                 .postNr(leilighet.getPostNr())
                 .postSted(leilighet.getPostSted())
+                .beskrivelse(leilighet.getBeskrivelse())
                 .build();
     }
 
