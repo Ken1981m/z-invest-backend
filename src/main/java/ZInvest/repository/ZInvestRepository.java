@@ -260,7 +260,7 @@ public class ZInvestRepository {
     }
 
     public Leilighet hentLeilighet(int id) {
-        String sql = "SELECT ID, NAVN, ADRESSE, POSTNR, POSTSTED FROM LEILIGHET WHERE ID = ?";
+        String sql = "SELECT ID, NAVN, ADRESSE, POSTNR, POSTSTED, BESKRIVELSE FROM LEILIGHET WHERE ID = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, new LeilighetMapper());
     }
 
