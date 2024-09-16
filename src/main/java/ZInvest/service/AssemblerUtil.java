@@ -110,13 +110,21 @@ public class AssemblerUtil {
         List<UtgiftDetalj> utgiftDetaljer = new ArrayList<>();
         utgiftRegnskapRequestList.forEach(utgiftRegnskapRequest ->
             utgiftDetaljer.add(new UtgiftDetalj.Builder()
-                    .navn(utgiftRegnskapRequest.getLabel() != null ? utgiftRegnskapRequest.getLabel() : utgiftRegnskapRequest.getUtgiftBeskrivelse())
+                    .navn(hentNavnOgBeskrivelse(utgiftRegnskapRequest))
                     .belop(utgiftRegnskapRequest.getBelop())
                     .build()
             )
         );
 
         return utgiftDetaljer;
+    }
+
+    private static String hentNavnOgBeskrivelse(UtgiftRegnskapRequest utgiftRegnskapRequest) {
+        return utgiftRegnskapRequest.getLabel() != null
+                ? (utgiftRegnskapRequest.getLabel() + (
+                    !"".equals(utgiftRegnskapRequest.getUtgiftBeskrivelse()) ? " - " + utgiftRegnskapRequest.getUtgiftBeskrivelse() : ""
+                ) )
+                : utgiftRegnskapRequest.getUtgiftBeskrivelse();
     }
 
     public static LeilighetRequest assembleLeilighetRequest(Leilighet leilighet) {
