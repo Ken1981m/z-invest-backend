@@ -5,6 +5,7 @@ import ZInvest.domain.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AssemblerUtil {
 
@@ -46,15 +47,32 @@ public class AssemblerUtil {
         return inntektRequests;
     }
 
+    //Initierer inntekt for alle måneder, de månedene som ikke har inntekt, får 0 kr satt
     public static List<InntektRegnskapRequest> assembleInntektRegnskapRequest(List<Inntekt> inntektList) {
         List<InntektRegnskapRequest> inntektRegnskapRequests = new ArrayList<>();
-        inntektList.forEach(inntekt ->
+
+        for (int i = 1; i <= 12; i++) {
+            int mnd = i;
+            Optional<Inntekt> mndInntekt = inntektList.stream()
+                    .filter(inntekt -> inntekt.getMnd() == mnd && inntekt.getBelop() > 0)
+                    .findFirst();
+
+            if (mndInntekt.isPresent()) {
                 inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
-                        .label(MaanedMap.hentMaaned(inntekt.getMnd()))
-                        .belop(inntekt.getBelop())
+                        .label(MaanedMap.hentMaaned(mndInntekt.get().getMnd()))
+                        .belop(mndInntekt.get().getBelop())
                         .build()
-                )
-        );
+                );
+            }
+            else {
+                inntektRegnskapRequests.add(new InntektRegnskapRequest.Builder()
+                        .label(MaanedMap.hentMaaned(mnd))
+                        .belop(0L)
+                        .build()
+                );
+            }
+        }
+
         return inntektRegnskapRequests;
     }
 
