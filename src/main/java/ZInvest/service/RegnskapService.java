@@ -22,15 +22,17 @@ public class RegnskapService {
     DataService dataService;
 
 
-    public List<InntektRegnskapRequest> hentInntektRegnskapForFlereAar(String leilighetIds, String aarListe) {
+    public List<InntektRegnskapRequest> hentInntektRegnskapForFlereAar(String leilighetIds, String aarListe, String mndListe) {
         Integer[] leilighetIdArray = Arrays.stream(leilighetIds.split(","))
                 .map(Integer::valueOf)
                 .toArray(Integer[]::new);
         String[] aarArray = aarListe.split(";");
+        String[] mndArray = mndListe.split(";");
 
         List<InntektRegnskapRequest> aktuelleAarList = new ArrayList<>();
 
-        List<InntektRegnskapRequest> inntektRegnskap = hentInntektRegnskap(leilighetIdArray, aarArray[0]);
+        List<InntektRegnskapRequest> inntektRegnskap =
+                hentInntektRegnskap(leilighetIdArray, aarArray[0], mndArray[0], mndArray[1]);
         if (!inntektRegnskap.isEmpty()) {
             aktuelleAarList.add(getAarRad(aarArray[0]));
         }
@@ -43,7 +45,8 @@ public class RegnskapService {
         });
 
         for (int i=1; i< aarArray.length; i++) {
-            List<InntektRegnskapRequest> hentetRegnskap = hentInntektRegnskap(leilighetIdArray, aarArray[i]);
+            List<InntektRegnskapRequest> hentetRegnskap =
+                    hentInntektRegnskap(leilighetIdArray, aarArray[i], mndArray[0], mndArray[1]);
             assembleInntektRegnskap(inntektRegnskap, hentetRegnskap);
 
             if (!hentetRegnskap.isEmpty()) {
@@ -92,16 +95,18 @@ public class RegnskapService {
         });
     }
 
-    public Map<String, List<UtgiftRegnskapRequest>> hentUtgiftRegnskap(String leilighetIds, String aar) {
+    public Map<String, List<UtgiftRegnskapRequest>> hentUtgiftRegnskap(String leilighetIds, String aar, String mndListe) {
         Map<String, List<UtgiftRegnskapRequest>> utgiftRegnskapMap = new HashMap<>();
 
         Integer[] leilighetIdArray = Arrays.stream(leilighetIds.split(","))
                 .map(Integer::valueOf)
                 .toArray(Integer[]::new);
 
+        String[] mndArray = mndListe.split(";");
+
         List<UtgiftRegnskapRequest> utgiftRegnskapRequests = AssemblerUtil.assembleUtgiftRegnskapRequest(
-                repository.hentUtgift(leilighetIdArray, Integer.parseInt(aar))
-        );
+                repository.hentUtgift(leilighetIdArray, Integer.parseInt(aar),
+                        Integer.parseInt(mndArray[0]), Integer.parseInt(mndArray[1])));
 
         Arrays.asList(leilighetIds.split(",")).forEach(leilighetId -> {
 
@@ -151,13 +156,16 @@ public class RegnskapService {
     }
 
 
-    protected List<InntektRegnskapRequest> hentInntektRegnskap(Integer[] leilighetIdArray, String aar) {
+    protected List<InntektRegnskapRequest> hentInntektRegnskap(
+            Integer[] leilighetIdArray, String aar, String fraOgMedMnd, String tilOgMedMnd) {
+
         List<InntektRegnskapRequest> inntektRegnskapRequests = AssemblerUtil.assembleInntektRegnskapRequest(
-                repository.hentInntekt(leilighetIdArray, Integer.parseInt(aar)));
+                repository.hentInntekt(leilighetIdArray, Integer.parseInt(aar),
+                        Integer.parseInt(fraOgMedMnd), Integer.parseInt(tilOgMedMnd)));
 
         List<UtgiftRequest> utgiftRequests = AssemblerUtil.assembleUtgiftRequest(
-                repository.hentUtgift(leilighetIdArray, Integer.parseInt(aar))
-        );
+                repository.hentUtgift(leilighetIdArray, Integer.parseInt(aar),
+                        Integer.parseInt(fraOgMedMnd), Integer.parseInt(tilOgMedMnd)));
 
         if (!inntektRegnskapRequests.isEmpty()) {
             addEmptyRow(inntektRegnskapRequests);

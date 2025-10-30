@@ -58,13 +58,14 @@ class RegnskapServiceTest {
     void testHentInntektRegnskapForFlereAar() {
         String leilighetIds = "1,2";
         String aarListe = "2021;2022";
+        String mndListe = "1;12";
         when(repository.hentSkatteprosent(anyInt())).thenReturn(22L);
-        when(repository.hentInntekt(any(Integer[].class), eq(2021))).thenReturn(hentTestInntektForRegnskapFor2021());
-        when(repository.hentInntekt(any(Integer[].class), eq(2022))).thenReturn(hentTestInntektForRegnskapFor2022());
-        when(repository.hentUtgift(any(Integer[].class), eq(2021))).thenReturn(hentTestUtgiftForRegnskapFor2021());
-        when(repository.hentUtgift(any(Integer[].class), eq(2022))).thenReturn(hentTestUtgiftForRegnskapFor2022());
+        when(repository.hentInntekt(any(Integer[].class), eq(2021), eq(1), eq(12))).thenReturn(hentTestInntektForRegnskapFor2021());
+        when(repository.hentInntekt(any(Integer[].class), eq(2022), eq(1), eq(12))).thenReturn(hentTestInntektForRegnskapFor2022());
+        when(repository.hentUtgift(any(Integer[].class), eq(2021), eq(1), eq(12))).thenReturn(hentTestUtgiftForRegnskapFor2021());
+        when(repository.hentUtgift(any(Integer[].class), eq(2022), eq(1), eq(12))).thenReturn(hentTestUtgiftForRegnskapFor2022());
 
-        List<InntektRegnskapRequest> regnskap = regnskapService.hentInntektRegnskapForFlereAar(leilighetIds, aarListe);
+        List<InntektRegnskapRequest> regnskap = regnskapService.hentInntektRegnskapForFlereAar(leilighetIds, aarListe, mndListe);
 
         assertThat(regnskap.get(0).getAar()).isEqualTo("2021");
         assertThat(regnskap.get(1).getAar()).isEqualTo("2022");

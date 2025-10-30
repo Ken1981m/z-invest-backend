@@ -6,6 +6,9 @@ import ZInvest.mapping.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -192,24 +195,28 @@ public class ZInvestRepository {
        return jdbcTemplate.query(sql, new InntektTypeMapper());
     }
 
-    public List<Inntekt> hentInntekt(Integer[] leilighetIds, int aar) {
-        String placeholders = IntStream.range(0, leilighetIds.length)
-                .mapToObj(i -> "?")
-                .collect(Collectors.joining(","));
+    public List<Inntekt> hentInntekt(Integer[] leilighetIds, int aar, int fraOgMedMnd, int tilOgMedMnd) {
+        String leilighetPlaceholders = String.join(",",
+                Collections.nCopies(leilighetIds.length, "?"));
 
-        String sql = "SELECT SUM(BELOP) AS BELOP, AAR, MND " +
-                     "FROM INNTEKT WHERE " +
-                     "LEILIGHET_ID IN (" + placeholders + ") AND AAR = ? GROUP BY MND, AAR ORDER BY MND";
+        String sql =
+                "SELECT SUM(BELOP) AS BELOP, AAR, MND " +
+                        "FROM INNTEKT " +
+                        "WHERE LEILIGHET_ID IN (" + leilighetPlaceholders + ") " +
+                        "AND AAR = ? " +
+                        "AND MND BETWEEN ? AND ? " +
+                        "GROUP BY MND, AAR " +
+                        "ORDER BY MND";
 
-        Object[] params = new Object[leilighetIds.length + 1];
-        System.arraycopy(leilighetIds, 0, params, 0, leilighetIds.length);
-        params[leilighetIds.length] = aar;
+        List<Object> params = new ArrayList<>();
+        Collections.addAll(params, leilighetIds);
+        params.add(aar);
+        params.add(fraOgMedMnd);
+        params.add(tilOgMedMnd);
 
-        List<Inntekt> inntektList = jdbcTemplate.query(sql, params, new InntektRegnskapMapper());
-
+        List<Inntekt> inntektList = jdbcTemplate.query(sql, params.toArray(), new InntektRegnskapMapper());
         return inntektList;
     }
-
 
     public List<Inntekt> hentInntekt(int leilighetId, int inntektTypeId, int aar) {
         String sql = "SELECT ID, LEILIGHET_ID, INNTEKT_TYPE_ID, BELOP, AAR, MND, BESKRIVELSE " +
@@ -219,25 +226,27 @@ public class ZInvestRepository {
         return inntektList;
     }
 
-    public List<Utgift> hentUtgift(Integer[] leilighetIds, int aar) {
-        String placeholders = IntStream.range(0, leilighetIds.length)
-                .mapToObj(i -> "?")
-                .collect(Collectors.joining(","));
+    public List<Utgift> hentUtgift(Integer[] leilighetIds, int aar, int fraOgMedMnd, int tilOgMedMnd) {
+        String leilighetPlaceholders = String.join(",",
+                Collections.nCopies(leilighetIds.length, "?"));
 
         String sql = "SELECT U.ID, U.LEILIGHET_ID, U.UTGIFT_TYPE_ID, U.BELOP, U.AAR, U.MND, U.BESKRIVELSE AS UTGIFT_BESKRIVELSE," +
                 " UT.MAANEDUAVHENGIG, UT.NAVN AS UTGIFT_TYPE_NAVN, UT.BESKRIVELSE AS UTGIFT_TYPE_BESKRIVELSE " +
                 "FROM UTGIFT U, UTGIFT_TYPE UT WHERE " +
                 "U.UTGIFT_TYPE_ID = UT.ID AND " +
-                "LEILIGHET_ID IN (" + placeholders + ") AND AAR = ? ORDER BY MND";
+                "LEILIGHET_ID IN (" + leilighetPlaceholders + ") AND AAR = ? " +
+                "AND MND BETWEEN ? AND ? " +
+                "ORDER BY MND";
 
-        Object[] params = new Object[leilighetIds.length + 1];
-        System.arraycopy(leilighetIds, 0, params, 0, leilighetIds.length);
-        params[leilighetIds.length] = aar;
+        List<Object> params = new ArrayList<>();
+        Collections.addAll(params, leilighetIds);
+        params.add(aar);
+        params.add(fraOgMedMnd);
+        params.add(tilOgMedMnd);
 
-        List<Utgift> utgiftList = jdbcTemplate.query(sql, params, new UtgiftMapper());
+        List<Utgift> utgiftList = jdbcTemplate.query(sql, params.toArray(), new UtgiftMapper());
         return utgiftList;
     }
-
 
     public List<Utgift> hentUtgift(int leilighetId, int utgiftTypeId, int aar) {
         String sql = "SELECT U.ID, U.LEILIGHET_ID, U.UTGIFT_TYPE_ID, U.BELOP, U.AAR, U.MND, U.BESKRIVELSE AS UTGIFT_BESKRIVELSE," +

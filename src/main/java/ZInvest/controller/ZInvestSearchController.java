@@ -36,17 +36,24 @@ public class ZInvestSearchController{
 
     @CrossOrigin
     @GetMapping("/hentInntektRegnskap")
-    public List<InntektRegnskapRequest> hentInntektRegnskap(@RequestParam String leilighetIds,
-                                                    @RequestParam String aarliste) {
-        List<InntektRegnskapRequest> inntektRegnskapRequest = regnskapService.hentInntektRegnskapForFlereAar(leilighetIds, aarliste);
+    public List<InntektRegnskapRequest> hentInntektRegnskap(
+            @RequestParam String leilighetIds,
+            @RequestParam String aarliste,
+            @RequestParam String mndListe
+    ) {
+        List<InntektRegnskapRequest> inntektRegnskapRequest =
+                regnskapService.hentInntektRegnskapForFlereAar(leilighetIds, aarliste, mndListe);
         return inntektRegnskapRequest;
     }
 
     @CrossOrigin
     @GetMapping("/hentUtgiftRegnskap")
-    public Map<String, List<UtgiftRegnskapRequest>> hentUtgiftRegnskap(@RequestParam String leilighetIds,
-                                                  @RequestParam String aar) {
-        Map<String, List<UtgiftRegnskapRequest>> utgiftRegnskap = regnskapService.hentUtgiftRegnskap(leilighetIds, aar);
+    public Map<String, List<UtgiftRegnskapRequest>> hentUtgiftRegnskap(
+            @RequestParam String leilighetIds,
+            @RequestParam String aar,
+            @RequestParam String mndListe) {
+        Map<String, List<UtgiftRegnskapRequest>> utgiftRegnskap =
+                regnskapService.hentUtgiftRegnskap(leilighetIds, aar, mndListe);
         return utgiftRegnskap;
     }
 
